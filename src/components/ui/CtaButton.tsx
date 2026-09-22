@@ -16,15 +16,22 @@ export function CtaButton({
   href,
   children,
   variant = "accent",
+  external = false,
 }: {
   href: string;
   children: React.ReactNode;
   variant?: Variant;
+  /** Opens in a new tab (for off-site links). */
+  external?: boolean;
 }) {
   const block = `flex h-12 items-center justify-center rounded-2xl transition-all duration-300 ${tones[variant]}`;
 
   return (
-    <a href={href} className="group inline-flex items-center text-base font-medium">
+    <a
+      href={href}
+      className="group inline-flex items-center text-base font-medium"
+      {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+    >
       <span className={`${block} mr-0.5 w-12 overflow-hidden group-hover:mr-0 group-hover:w-0`}>
         <Sparkle />
       </span>

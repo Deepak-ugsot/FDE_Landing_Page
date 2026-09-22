@@ -1,7 +1,7 @@
 import { program } from "@/content/program";
 import { InverseCorner } from "@/components/ui/InverseCorner";
 import { ScrollRevealText } from "@/components/ui/ScrollRevealText";
-import { HowItWorks } from "./HowItWorks";
+import { WhoIsFde } from "./WhoIsFde";
 import { MarketSignal } from "./MarketSignal";
 
 const ink = "var(--color-ink)";
@@ -51,10 +51,11 @@ export function WhyFde() {
         {/* Theory: pinned, revealed character by character on scroll */}
         <ScrollRevealText label="What is an FDE?" sentences={theory} />
 
-        {/* How the role works in practice: Services-style step row */}
-        <HowItWorks applyHref={program.applyHref} />
-
       </div>
+
+      {/* Who the role is: three disciplines merging into one engineer. Outside the centred
+          container so its dark panel can span the page like the hero card. */}
+      <WhoIsFde />
 
       {/* Market trend: full-width "Our vision"-style card, outside the centred container */}
       {/* overflow-x-clip trims the cluster's spill past the viewport edge (same colour as the page) without a scrollbar */}
