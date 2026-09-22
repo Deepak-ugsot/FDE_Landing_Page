@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { InverseCorner } from "@/components/ui/InverseCorner";
 
 const roles = [
   {
@@ -183,29 +184,34 @@ export function WhoIsFde() {
 
   return (
     <div className="text-center">
-      <div className="mx-auto max-w-[1328px] px-5 sm:px-8 lg:px-12">
-        <p className="inline-flex items-center gap-2 rounded-full border border-white/12 bg-ink-raised/60 px-4 py-1.5 text-sm text-mist">
+      {/* Stepped dark card like the YouTube panel: a label tab rises from the top-left */}
+      <div className="relative mx-4 mt-24 rounded-[32px] rounded-tl-none bg-ink-deep px-5 pt-10 pb-10 sm:mx-6 sm:mt-28 sm:px-10 sm:pt-12 lg:mx-8">
+        <div className="absolute bottom-full left-0 flex h-14 items-center gap-3 rounded-t-3xl bg-ink-deep px-5 font-display text-lg font-extrabold tracking-tight sm:h-16 sm:px-6 sm:text-2xl">
+          <InverseCorner
+            at="tr"
+            color="var(--color-ink-deep)"
+            className="-right-6 bottom-0"
+          />
           <span
-            className="size-1.5 rounded-full bg-accent"
+            className="size-2.5 shrink-0 rounded-full bg-accent"
             aria-hidden="true"
           />
-          Who is an FDE?
-        </p>
-        <h3 className="mx-auto mt-5 font-display text-[clamp(1.75rem,3.6vw,3rem)] leading-[1.1] font-light tracking-[-0.01em] lg:whitespace-nowrap">
-          Who is a Forward Deployed{" "}
-          <span className="bg-gradient-to-r from-paper via-paper/70 to-paper/35 bg-clip-text text-transparent">
-            Engineer?
-          </span>
-        </h3>
-        <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-mist/80">
-          This role combines building, deploying and owning AI systems. It spans
-          software, platforms and solutions. It exists to make AI work beyond
-          demos.
-        </p>
-      </div>
-
-      {/* Diagram panel */}
-      <div className="relative mx-4 mt-10 overflow-hidden rounded-[32px] bg-ink-deep px-5 pt-12 pb-10 sm:mx-6 sm:px-10 lg:mx-8">
+          <span className="whitespace-nowrap">Who is an FDE?</span>
+        </div>
+        {/* Heading, inside the card */}
+        <div className="mb-12 lg:mb-14">
+          <h3 className="mx-auto font-display text-[clamp(1.75rem,3.6vw,3rem)] leading-[1.1] font-light tracking-[-0.01em] lg:whitespace-nowrap">
+            Who is a Forward Deployed{" "}
+            <span className="bg-gradient-to-r from-paper via-paper/70 to-paper/35 bg-clip-text text-transparent">
+              Engineer?
+            </span>
+          </h3>
+          <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-mist/80">
+            This role combines building, deploying and owning AI systems. It
+            spans software, platforms and solutions. It exists to make AI work
+            beyond demos.
+          </p>
+        </div>
         {/* Desktop / tablet: cards → merging connectors → result */}
         <div className="mx-auto hidden max-w-[980px] md:block">
           {/* No grid gap: columns stay exactly 1/3 wide so card centres line up with the connectors */}
