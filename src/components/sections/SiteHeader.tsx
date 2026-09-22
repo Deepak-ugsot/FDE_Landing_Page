@@ -65,9 +65,14 @@ export function Nav() {
 
       {/* Mobile menu: native <details> keeps it JS-free. */}
       <details className="group lg:hidden">
-        <summary className="flex cursor-pointer list-none items-center gap-2 rounded-full bg-ink px-4 py-2 font-display text-base font-bold [&::-webkit-details-marker]:hidden">
-          <span className="size-2 rounded-full bg-accent transition-transform group-open:scale-125" aria-hidden="true" />
-          Menu
+        {/* Hamburger icon that turns into an X when open */}
+        <summary className="relative flex size-11 cursor-pointer list-none items-center justify-center rounded-full bg-ink transition-colors group-open:bg-accent group-open:text-ink-deep [&::-webkit-details-marker]:hidden">
+          <span className="sr-only">Menu</span>
+          <span aria-hidden="true" className="relative block h-3.5 w-5">
+            <span className="absolute top-0 left-0 h-[2px] w-full rounded-full bg-current transition-transform duration-300 group-open:top-1/2 group-open:-translate-y-1/2 group-open:rotate-45" />
+            <span className="absolute top-1/2 left-0 h-[2px] w-full -translate-y-1/2 rounded-full bg-current transition-opacity duration-200 group-open:opacity-0" />
+            <span className="absolute bottom-0 left-0 h-[2px] w-3 rounded-full bg-accent transition-all duration-300 group-open:bottom-1/2 group-open:w-full group-open:translate-y-1/2 group-open:-rotate-45 group-open:bg-current" />
+          </span>
         </summary>
         <ul className="absolute inset-x-5 top-full z-20 mt-1 space-y-1 rounded-3xl bg-ink p-3 shadow-2xl sm:right-8 sm:left-auto sm:w-64">
           {allLinks.map((link) => (
