@@ -227,9 +227,6 @@ export function Projects() {
               </span>
               <span className="text-xs text-dim">{pad(n)}</span>
             </div>
-            <p className="ml-auto font-mono text-xs text-dim sm:mx-auto sm:pr-28">
-              Scroll to see projects <span aria-hidden="true">↓</span>
-            </p>
           </div>
         </div>
       </div>

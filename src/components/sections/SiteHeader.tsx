@@ -42,11 +42,22 @@ export function Nav() {
         <Logo className="size-12 sm:size-14" />
       </a>
 
-      <ul className="hidden items-center gap-11 text-[15px] text-paper/90 lg:flex">
+      <ul className="hidden items-center gap-5 text-[15px] lg:flex">
         {allLinks.map((link) => (
           <li key={link.href}>
-            <a href={link.href} className="transition-colors hover:text-accent">
+            {/* Hover: an accent dot pops in on the left and a soft gradient pill fades in behind */}
+            <a
+              href={link.href}
+              className="group relative isolate flex h-8 items-center rounded-lg pr-2.5 pl-5 text-paper/80 transition-colors duration-300 hover:text-paper focus-visible:text-paper"
+            >
+              <span className="absolute left-2 flex size-1.5 items-center justify-center" aria-hidden="true">
+                <span className="size-0 rounded-full bg-accent transition-all duration-300 ease-out group-hover:size-full group-focus-visible:size-full" />
+              </span>
               {link.label}
+              <span
+                aria-hidden="true"
+                className="absolute inset-0 -z-10 rounded-lg bg-[linear-gradient(315deg,rgba(235,255,85,0.16),rgba(235,255,85,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100"
+              />
             </a>
           </li>
         ))}

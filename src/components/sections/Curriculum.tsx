@@ -46,6 +46,159 @@ function Arrow({ back = false }: { back?: boolean }) {
   );
 }
 
+/** Summary, project and topics for one module (shared by the desktop panel and the phone accordion). */
+function ModuleBody({ index }: { index: number }) {
+  const m = curriculum[index];
+  return (
+    <>
+      <p className="max-w-2xl text-base leading-relaxed text-mist/85">{m.summary}</p>
+
+      {m.project && (
+        <div className="mt-6 flex items-center gap-4 rounded-2xl border border-accent/25 bg-accent/[0.06] p-4">
+          <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-accent text-ink-deep" aria-hidden="true">
+            <svg viewBox="0 0 24 24" className="size-5">
+              <path d="M5 21V4m0 0h11l-2 4 2 4H5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+            </svg>
+          </span>
+          <div>
+            <p className="font-mono text-[11px] tracking-[0.12em] text-accent uppercase">Project you&apos;ll ship</p>
+            <p className="font-display text-lg leading-snug">{m.project}</p>
+          </div>
+        </div>
+      )}
+
+      <p className="mt-8 font-mono text-[11px] tracking-[0.14em] text-dim uppercase">Topics covered</p>
+      <div className="mt-4 grid gap-6 sm:grid-cols-2">
+        {m.topics.map((t) => (
+          <div key={t.heading}>
+            <h4 className="flex items-center gap-2 font-display text-base font-semibold">
+              <span className="size-1.5 rounded-full bg-accent" aria-hidden="true" />
+              {t.heading}
+            </h4>
+            <ul className="mt-3 flex flex-wrap gap-2">
+              {t.items.map((item) => (
+                <li key={item} className="rounded-full border border-ink-line px-3 py-1.5 text-sm leading-snug text-muted">
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </>
+  );
+}
+
+/**
+ * Phone / tablet layout: each module is a card on a thin timeline spine. Tapping
+ * one slides its details open (grid 0fr → 1fr) and closes the others; the opened
+ * card's header is then brought back into view if the close above pushed it off.
+ */
+function ModuleAccordion() {
+  const [open, setOpen] = useState<number | null>(0);
+  const headersRef = useRef<(HTMLButtonElement | null)[]>([]);
+
+  const toggle = (i: number) => {
+    const next = open === i ? null : i;
+    setOpen(next);
+    if (next === null) return;
+    // After the height animation, make sure the opened header is on screen.
+    window.setTimeout(() => {
+      const top = headersRef.current[next]?.getBoundingClientRect().top ?? 0;
+      if (top < 16) window.scrollBy({ top: top - 16, behavior: "smooth" });
+    }, 520);
+  };
+
+  return (
+    <div className="relative mt-10 lg:hidden">
+      {/* Timeline spine running through the number badges */}
+      <span aria-hidden="true" className="absolute top-6 bottom-6 left-[36px] w-px bg-ink-line" />
+      <ol className="relative flex flex-col gap-3">
+        {curriculum.map((mod, i) => {
+          const isOpen = open === i;
+          return (
+            <li
+              key={mod.title}
+              className={`overflow-hidden rounded-2xl border transition-[border-color,background-color,box-shadow] duration-500 ${
+                isOpen
+                  ? "border-accent/30 bg-ink bg-[linear-gradient(160deg,rgba(235,255,85,0.07),transparent_45%)] shadow-[0_20px_50px_-30px_rgba(235,255,85,0.35)]"
+                  : "border-ink-line/70 bg-ink"
+              }`}
+            >
+              <h3>
+                <button
+                  ref={(el) => {
+                    headersRef.current[i] = el;
+                  }}
+                  type="button"
+                  id={`curriculum-acc-${i}`}
+                  aria-expanded={isOpen}
+                  aria-controls={`curriculum-acc-panel-${i}`}
+                  onClick={() => toggle(i)}
+                  className="flex w-full items-center gap-4 p-4 text-left"
+                >
+                  <span
+                    className={`flex size-10 shrink-0 items-center justify-center rounded-xl font-mono text-sm font-bold transition-colors duration-500 ${
+                      isOpen ? "bg-accent text-ink-deep" : "bg-ink-raised text-dim"
+                    }`}
+                  >
+                    {pad(i + 1)}
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className={`block font-display text-[17px] leading-snug transition-colors ${isOpen ? "text-paper" : "text-mist"}`}>
+                      {mod.title}
+                    </span>
+                    <span className="mt-1 flex flex-wrap items-center gap-x-2 font-mono text-[11px] text-dim">
+                      <span className="inline-flex items-center gap-1">
+                        <Clock />
+                        {mod.duration}
+                      </span>
+                      {weeksOf(mod.duration) > 0 && <span aria-hidden="true">·</span>}
+                      {weeksOf(mod.duration) > 0 && <span>{weekRange(i)}</span>}
+                    </span>
+                  </span>
+                  {/* Plus → minus */}
+                  <span
+                    aria-hidden="true"
+                    className={`relative flex size-8 shrink-0 items-center justify-center rounded-full border transition-colors duration-500 ${
+                      isOpen ? "border-accent bg-accent text-ink-deep" : "border-ink-line text-mist"
+                    }`}
+                  >
+                    <span className="absolute h-[1.5px] w-3 rounded-full bg-current" />
+                    <span
+                      className={`absolute h-[1.5px] w-3 rounded-full bg-current transition-transform duration-500 ${
+                        isOpen ? "rotate-0" : "rotate-90"
+                      }`}
+                    />
+                  </span>
+                </button>
+              </h3>
+              <div
+                id={`curriculum-acc-panel-${i}`}
+                role="region"
+                aria-labelledby={`curriculum-acc-${i}`}
+                className={`grid transition-[grid-template-rows] duration-500 ease-[cubic-bezier(0.65,0,0.35,1)] ${
+                  isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+                }`}
+              >
+                <div className="overflow-hidden">
+                  <div
+                    className={`border-t border-ink-line/70 px-4 pt-4 pb-5 transition-opacity duration-500 ${
+                      isOpen ? "opacity-100 delay-150" : "opacity-0"
+                    }`}
+                  >
+                    <ModuleBody index={i} />
+                  </div>
+                </div>
+              </div>
+            </li>
+          );
+        })}
+      </ol>
+    </div>
+  );
+}
+
 /**
  * Curriculum: one card with the module list and the selected module's
  * details, instead of every module being expanded down the page.
@@ -86,8 +239,8 @@ export function Curriculum() {
           </dl>
         </div>
 
-        {/* Module list + selected module */}
-        <div className="mt-10 grid gap-6 lg:grid-cols-[320px_1fr] lg:gap-10">
+        {/* Desktop: module list + selected module */}
+        <div className="mt-10 hidden gap-10 lg:grid lg:grid-cols-[320px_1fr]">
           <div role="tablist" aria-label="Curriculum modules" aria-orientation="vertical" className="flex flex-col gap-1" onKeyDown={onKeyDown}>
             {curriculum.map((mod, i) => {
               const isActive = i === active;
@@ -145,39 +298,8 @@ export function Curriculum() {
                 <span className="font-mono text-xs text-dim">{weekRange(active)}</span>
               </div>
               <h3 className="mt-4 font-display text-[clamp(1.75rem,3vw,2.5rem)] leading-[1.1] font-light">{m.title}</h3>
-              <p className="mt-3 max-w-2xl text-base leading-relaxed text-mist/85">{m.summary}</p>
-
-              {m.project && (
-                <div className="mt-6 flex items-center gap-4 rounded-2xl border border-accent/25 bg-accent/[0.06] p-4">
-                  <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-accent text-ink-deep" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" className="size-5">
-                      <path d="M5 21V4m0 0h11l-2 4 2 4H5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
-                    </svg>
-                  </span>
-                  <div>
-                    <p className="font-mono text-[11px] tracking-[0.12em] text-accent uppercase">Project you&apos;ll ship</p>
-                    <p className="font-display text-lg leading-snug">{m.project}</p>
-                  </div>
-                </div>
-              )}
-
-              <p className="mt-8 font-mono text-[11px] tracking-[0.14em] text-dim uppercase">Topics covered</p>
-              <div className="mt-4 grid gap-6 sm:grid-cols-2">
-                {m.topics.map((t) => (
-                  <div key={t.heading}>
-                    <h4 className="flex items-center gap-2 font-display text-base font-semibold">
-                      <span className="size-1.5 rounded-full bg-accent" aria-hidden="true" />
-                      {t.heading}
-                    </h4>
-                    <ul className="mt-3 flex flex-wrap gap-2">
-                      {t.items.map((item) => (
-                        <li key={item} className="rounded-full border border-ink-line px-3 py-1.5 text-sm leading-snug text-muted">
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
+              <div className="mt-3">
+                <ModuleBody index={active} />
               </div>
             </div>
 
@@ -207,6 +329,9 @@ export function Curriculum() {
             </div>
           </div>
         </div>
+
+        {/* Phone / tablet: accordion */}
+        <ModuleAccordion />
       </div>
     </section>
   );
