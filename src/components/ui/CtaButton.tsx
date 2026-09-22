@@ -1,9 +1,9 @@
 import { Sparkle } from "./Sparkle";
 
-type Variant = "lilac" | "paper" | "ink";
+type Variant = "accent" | "paper" | "ink";
 
 const tones: Record<Variant, string> = {
-  lilac: "bg-lilac text-ink-deep group-hover:bg-lilac-light",
+  accent: "bg-accent text-ink-deep group-hover:bg-accent-light",
   paper: "bg-paper text-ink-deep group-hover:bg-white",
   ink: "bg-ink-deep text-paper group-hover:bg-black",
 };
@@ -15,7 +15,7 @@ const tones: Record<Variant, string> = {
 export function CtaButton({
   href,
   children,
-  variant = "lilac",
+  variant = "accent",
 }: {
   href: string;
   children: React.ReactNode;

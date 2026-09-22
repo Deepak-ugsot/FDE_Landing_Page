@@ -47,9 +47,9 @@ const steps = [
 ];
 
 // Card specs mirror the reference's Services cards.
-const divider = "border-[#48424e]";
-const hoverGradient = "bg-[linear-gradient(135deg,rgba(214,163,228,0)_0%,rgba(214,163,228,0.07)_100%)]";
-const arrowGradient = "bg-[linear-gradient(315deg,rgba(214,163,228,0.16)_0%,rgba(214,163,228,0)_100%)]";
+const divider = "border-[#44443e]";
+const hoverGradient = "bg-[linear-gradient(135deg,rgba(235,255,85,0)_0%,rgba(235,255,85,0.07)_100%)]";
+const arrowGradient = "bg-[linear-gradient(315deg,rgba(235,255,85,0.16)_0%,rgba(235,255,85,0)_100%)]";
 
 function Arrow({ left }: { left: boolean }) {
   return (
@@ -65,7 +65,7 @@ function Arrow({ left }: { left: boolean }) {
 
 /**
  * Services-style row. At rest all steps look the same. Hovering (or
- * clicking/focusing) a step gives it a soft lilac card, an icon and a left
+ * clicking/focusing) a step gives it a soft accent card, an icon and a left
  * arrow while the others dim; leaving the row returns to the resting state.
  */
 export function HowItWorks({ applyHref }: { applyHref: string }) {
@@ -76,7 +76,7 @@ export function HowItWorks({ applyHref }: { applyHref: string }) {
   return (
     <div>
       <p className="flex items-center gap-2 text-sm">
-        <span className="size-1.5 rounded-full bg-lilac" aria-hidden="true" />
+        <span className="size-1.5 rounded-full bg-accent" aria-hidden="true" />
         How an FDE works
       </p>
       <h3 className="mt-5 max-w-3xl font-display text-[clamp(2rem,4vw,3.25rem)] leading-[1.08] font-light tracking-[-0.01em]">

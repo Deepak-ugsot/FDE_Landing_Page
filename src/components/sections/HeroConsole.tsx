@@ -9,7 +9,7 @@ const stages = [
 
 const statusStyle = {
   done: "bg-sage/15 text-sage",
-  live: "bg-lilac/20 text-lilac",
+  live: "bg-accent/20 text-accent",
   next: "bg-white/5 text-dim",
 };
 
@@ -18,7 +18,7 @@ const log = [
   { mark: "✓", text: "golden-set evals passed", tone: "text-sage" },
   { mark: "✓", text: "PII guardrails enabled", tone: "text-sage" },
   { mark: "✓", text: "SSO (OIDC) connected", tone: "text-sage" },
-  { mark: "→", text: "canary: 10% of support team", tone: "text-lilac" },
+  { mark: "→", text: "canary: 10% of support team", tone: "text-accent" },
 ];
 
 export function HeroConsole() {
@@ -26,7 +26,7 @@ export function HeroConsole() {
     <div className="mx-auto max-w-4xl overflow-hidden rounded-t-2xl bg-ink-deep text-left shadow-[0_30px_80px_-20px_rgba(20,20,20,0.6)]">
       <div className="flex items-center gap-2 border-b border-white/5 px-5 py-3">
         <span className="size-2.5 rounded-full bg-flame/80" />
-        <span className="size-2.5 rounded-full bg-lilac/80" />
+        <span className="size-2.5 rounded-full bg-accent/80" />
         <span className="size-2.5 rounded-full bg-sage/80" />
         <span className="ml-3 font-mono text-xs text-dim">client-engagement · week 06</span>
       </div>
@@ -54,7 +54,7 @@ export function HeroConsole() {
           ))}
           <p className="mt-1 text-dim">
             <span className="mr-3">$</span>
-            <span className="inline-block h-4 w-2 translate-y-0.5 animate-pulse bg-lilac" />
+            <span className="inline-block h-4 w-2 translate-y-0.5 animate-pulse bg-accent" />
           </p>
         </div>
       </div>

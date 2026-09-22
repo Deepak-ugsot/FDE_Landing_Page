@@ -22,7 +22,7 @@ export function Ticker() {
       <Marquee className="min-w-0 flex-1 [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)]">
         {tickerItems.map((item) => (
           <span key={item.label} className="flex items-center gap-2 px-5">
-            <Sparkle className="size-2.5 text-lilac" />
+            <Sparkle className="size-2.5 text-accent" />
             <span className="text-dim">{item.label}</span>
             <span className="text-paper">{item.value}</span>
           </span>
@@ -45,7 +45,7 @@ export function Nav() {
       <ul className="hidden items-center gap-11 text-[15px] text-paper/90 lg:flex">
         {allLinks.map((link) => (
           <li key={link.href}>
-            <a href={link.href} className="transition-colors hover:text-lilac">
+            <a href={link.href} className="transition-colors hover:text-accent">
               {link.label}
             </a>
           </li>
@@ -55,7 +55,7 @@ export function Nav() {
       {/* Mobile menu: native <details> keeps it JS-free. */}
       <details className="group lg:hidden">
         <summary className="flex cursor-pointer list-none items-center gap-2 rounded-full bg-ink px-4 py-2 font-display text-base font-bold [&::-webkit-details-marker]:hidden">
-          <span className="size-2 rounded-full bg-lilac transition-transform group-open:scale-125" aria-hidden="true" />
+          <span className="size-2 rounded-full bg-accent transition-transform group-open:scale-125" aria-hidden="true" />
           Menu
         </summary>
         <ul className="absolute inset-x-5 top-full z-20 mt-1 space-y-1 rounded-3xl bg-ink p-3 shadow-2xl sm:right-8 sm:left-auto sm:w-64">
