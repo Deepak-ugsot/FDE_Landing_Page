@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { program } from "@/content/program";
+import { CardTab } from "@/components/ui/CardTab";
 import { CtaButton } from "@/components/ui/CtaButton";
 import { InverseCorner } from "@/components/ui/InverseCorner";
 
@@ -294,11 +295,7 @@ export function FreeCourse() {
       {/* Stepped dark card, like the hero: a label tab rises from the top-left and, on desktop,
           a CTA tab hangs from the bottom-right. The fillets join the tabs to the card. */}
       <div ref={panelRef} className="relative rounded-[32px] rounded-tl-none bg-ink-deep lg:rounded-br-none">
-        <div className="absolute bottom-full left-0 flex h-14 items-center gap-3 rounded-t-3xl bg-ink-deep px-5 font-display text-lg font-extrabold tracking-tight sm:h-16 sm:px-6 sm:text-2xl">
-          <InverseCorner at="tr" color={inkDeep} className="-right-6 bottom-0" />
-          <span className="size-2.5 shrink-0 rounded-full bg-[#ff0033]" aria-hidden="true" />
-          <span className="whitespace-nowrap">Free on YouTube</span>
-        </div>
+        <CardTab dot="bg-[#ff0033]">Free on YouTube</CardTab>
 
         {/* Canvas layer, clipped to the card (the plane drifts a few px with the pointer) */}
         <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-[inherit]">

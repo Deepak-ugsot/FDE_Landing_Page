@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Urbanist } from "next/font/google";
+import { SmoothScroll } from "@/components/SmoothScroll";
 import "./globals.css";
 
 // Free stand-ins for the reference fonts: Urbanist ≈ Telegraf (display), Inter ≈ Haffer SQ (body).
@@ -23,7 +24,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={`${urbanist.variable} ${inter.variable}`}>
-      <body className="min-h-screen">{children}</body>
+      <body className="min-h-screen">
+        <SmoothScroll />
+        {children}
+      </body>
     </html>
   );
 }

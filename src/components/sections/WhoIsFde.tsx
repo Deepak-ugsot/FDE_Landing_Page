@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { InverseCorner } from "@/components/ui/InverseCorner";
+import { CardTab } from "@/components/ui/CardTab";
 
 const roles = [
   {
@@ -186,18 +186,7 @@ export function WhoIsFde() {
     <div className="text-center">
       {/* Stepped dark card like the YouTube panel: a label tab rises from the top-left */}
       <div className="relative mx-4 mt-24 rounded-[32px] rounded-tl-none bg-ink-deep px-5 pt-10 pb-10 sm:mx-6 sm:mt-28 sm:px-10 sm:pt-12 lg:mx-8">
-        <div className="absolute bottom-full left-0 flex h-14 items-center gap-3 rounded-t-3xl bg-ink-deep px-5 font-display text-lg font-extrabold tracking-tight sm:h-16 sm:px-6 sm:text-2xl">
-          <InverseCorner
-            at="tr"
-            color="var(--color-ink-deep)"
-            className="-right-6 bottom-0"
-          />
-          <span
-            className="size-2.5 shrink-0 rounded-full bg-accent"
-            aria-hidden="true"
-          />
-          <span className="whitespace-nowrap">Who is an FDE?</span>
-        </div>
+        <CardTab>Who is an FDE?</CardTab>
         {/* Heading, inside the card */}
         <div className="mb-12 lg:mb-14">
           <h3 className="mx-auto font-display text-[clamp(1.75rem,3.6vw,3rem)] leading-[1.1] font-light tracking-[-0.01em] lg:whitespace-nowrap">

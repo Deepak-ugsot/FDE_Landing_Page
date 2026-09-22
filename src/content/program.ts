@@ -8,6 +8,10 @@ export const program = {
   brochureHref: "#brochure", // TODO: brochure PDF URL
   privacyHref: "#privacy", // TODO: privacy statement page
   youtubeHref: "https://www.youtube.com/@VishwaMohan-00", // TODO: link to the course playlist once it's live
+  // Course intro video, autoplayed (muted) when its section scrolls into view. Set ONE of these:
+  introVideoSrc: "", // TODO: a file in /public, e.g. "/assets/course-intro.mp4" (preferred: no YouTube branding)
+  introVideoId: "Zmz5gE9nJqY", // or a YouTube video ID (the part after "watch?v=")
+  introVideoStart: 1191, // seconds into the YouTube video to start from (19:51); 0 = beginning
   platformHref: "#platform", // TODO: paid practice platform sign-up URL
   platformPrice: "₹99",
   newsletterAction: "#newsletter", // TODO: form endpoint (e.g. your email/CRM provider); the footer form posts here

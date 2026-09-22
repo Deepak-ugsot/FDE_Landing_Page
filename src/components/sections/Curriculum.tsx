@@ -1,192 +1,210 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { curriculum } from "@/content/curriculum";
+import { CardTab } from "@/components/ui/CardTab";
 
-const moduleId = (i: number) => `module-${i + 1}`;
+const n = curriculum.length;
+const pad = (i: number) => String(i).padStart(2, "0");
+const weeksOf = (duration: string) => parseInt(duration, 10) || 0;
+const totalWeeks = curriculum.reduce((sum, m) => sum + weeksOf(m.duration), 0);
+const projectCount = curriculum.filter((m) => m.project).length;
+
+// Week each core module starts in; self-paced modules run alongside the core.
+const startWeek: number[] = [];
+let week = 1;
+for (const m of curriculum) {
+  startWeek.push(week);
+  week += weeksOf(m.duration);
+}
+const weekRange = (i: number) => {
+  const w = weeksOf(curriculum[i].duration);
+  if (!w) return "Alongside the core modules";
+  return w === 1 ? `Week ${startWeek[i]}` : `Weeks ${startWeek[i]}–${startWeek[i] + w - 1}`;
+};
+
+const stats = [
+  { value: n, label: "Modules" },
+  { value: totalWeeks, label: "Weeks" },
+  { value: projectCount, label: "Projects shipped" },
+];
 
 function Clock() {
   return (
-    <svg viewBox="0 0 24 24" className="size-4" aria-hidden="true">
+    <svg viewBox="0 0 24 24" className="size-3.5" aria-hidden="true">
       <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" strokeWidth="2" />
       <path d="M12 7v5l3 2" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
     </svg>
   );
 }
 
+function Arrow({ back = false }: { back?: boolean }) {
+  return (
+    <svg viewBox="0 0 24 24" className={`size-4 ${back ? "rotate-180" : ""}`} aria-hidden="true">
+      <path d="M4 12h15m-6-6 6 6-6 6" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 /**
- * Module list on the left (sticky, tracks the module in view) and one detailed
- * card per module on the right. On small screens the list becomes a sticky,
- * horizontally scrolling chip row.
+ * Curriculum: one card with the module list and the selected module's
+ * details, instead of every module being expanded down the page.
  */
 export function Curriculum() {
   const [active, setActive] = useState(0);
-  const cardsRef = useRef<(HTMLElement | null)[]>([]);
-  const chipsRef = useRef<HTMLDivElement>(null);
+  const tabsRef = useRef<(HTMLButtonElement | null)[]>([]);
+  const m = curriculum[active];
 
-  // Scroll-spy: the active module is the last one whose top has passed 40% of the viewport.
-  useEffect(() => {
-    let frame = 0;
-    const update = () => {
-      frame = 0;
-      const line = window.innerHeight * 0.4;
-      let next = 0;
-      cardsRef.current.forEach((el, i) => {
-        if (el && el.getBoundingClientRect().top <= line) next = i;
-      });
-      setActive(next);
-    };
-    const onScroll = () => {
-      if (!frame) frame = requestAnimationFrame(update);
-    };
-    update();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    return () => {
-      cancelAnimationFrame(frame);
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-    };
-  }, []);
-
-  // Keep the active chip visible in the mobile chip row (horizontal scroll only).
-  useEffect(() => {
-    const row = chipsRef.current;
-    const chip = row?.children[active] as HTMLElement | undefined;
-    if (row && chip) row.scrollTo({ left: chip.offsetLeft - 20, behavior: "smooth" });
-  }, [active]);
+  // Roving focus for the module list (↑/↓, Home/End), per the WAI-ARIA tabs pattern.
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    const keys: Record<string, number> = { ArrowDown: active + 1, ArrowUp: active - 1, Home: 0, End: n - 1 };
+    if (!(e.key in keys)) return;
+    e.preventDefault();
+    const next = (keys[e.key] + n) % n;
+    setActive(next);
+    tabsRef.current[next]?.focus();
+  };
 
   return (
-    <section id="curriculum" className="scroll-mt-6 py-20 lg:py-28">
-      <div className="mx-auto max-w-[1328px] px-5 sm:px-8 lg:px-12">
-        {/* Intro */}
-        <p className="flex items-center gap-2.5 font-display text-base font-bold">
-          <span className="size-2 rounded-full bg-accent" aria-hidden="true" />
-          Curriculum overview
-        </p>
-        <div className="mt-5 grid gap-6 lg:grid-cols-[1.3fr_1fr] lg:items-end">
-          <h2 className="font-display text-[clamp(2.2rem,4.5vw,3.5rem)] leading-[1.04] font-light tracking-[-0.01em]">
+    <section id="curriculum" className="mx-4 pt-28 pb-16 sm:mx-6 lg:mx-8 lg:pb-24">
+      <div className="relative rounded-[32px] rounded-tl-none bg-ink-deep px-5 pt-10 pb-8 sm:px-8 lg:px-12 lg:pt-12 lg:pb-12">
+        <CardTab>Curriculum</CardTab>
+
+        {/* Heading + key numbers */}
+        <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+          <h2 className="max-w-2xl font-display text-[clamp(2rem,4.2vw,3.25rem)] leading-[1.05] font-light tracking-[-0.01em]">
             The structured FDE curriculum <span className="text-dim">you&apos;ll follow.</span>
           </h2>
-          <p className="max-w-md text-base leading-relaxed text-mist lg:justify-self-end">
-            {curriculum.length} modules that take you from how LLMs work to running a full client engagement, with a
-            project to ship at every step.
-          </p>
+          <dl className="flex gap-8 sm:gap-12">
+            {stats.map((s) => (
+              <div key={s.label}>
+                <dt className="sr-only">{s.label}</dt>
+                <dd className="font-display text-4xl leading-none font-light text-accent sm:text-5xl">{s.value}</dd>
+                <dd className="mt-2 font-mono text-[11px] tracking-[0.12em] text-dim uppercase">{s.label}</dd>
+              </div>
+            ))}
+          </dl>
         </div>
 
-        {/* Mobile / tablet: sticky chip row */}
-        <nav aria-label="Curriculum modules" className="sticky top-0 z-10 -mx-5 mt-10 bg-ink/95 py-3 backdrop-blur sm:-mx-8 lg:hidden">
-          <div ref={chipsRef} className="flex gap-2 overflow-x-auto px-5 [scrollbar-width:none] sm:px-8">
-            {curriculum.map((m, i) => (
-              <a
-                key={m.title}
-                href={`#${moduleId(i)}`}
-                aria-current={i === active ? "true" : undefined}
-                className={`shrink-0 rounded-full border px-4 py-2 text-sm whitespace-nowrap transition-colors ${
-                  i === active ? "border-accent bg-accent text-ink-deep" : "border-ink-line text-mist"
-                }`}
-              >
-                Module {i + 1}
-              </a>
-            ))}
+        {/* Module list + selected module */}
+        <div className="mt-10 grid gap-6 lg:grid-cols-[320px_1fr] lg:gap-10">
+          <div role="tablist" aria-label="Curriculum modules" aria-orientation="vertical" className="flex flex-col gap-1" onKeyDown={onKeyDown}>
+            {curriculum.map((mod, i) => {
+              const isActive = i === active;
+              return (
+                <button
+                  key={mod.title}
+                  ref={(el) => {
+                    tabsRef.current[i] = el;
+                  }}
+                  type="button"
+                  role="tab"
+                  id={`curriculum-tab-${i}`}
+                  aria-selected={isActive}
+                  aria-controls="curriculum-panel"
+                  tabIndex={isActive ? 0 : -1}
+                  onClick={() => setActive(i)}
+                  className={`group relative flex w-full items-center gap-4 rounded-2xl px-4 py-3 text-left transition-colors ${
+                    isActive ? "bg-ink-raised" : "hover:bg-ink-raised/50"
+                  }`}
+                >
+                  <span
+                    aria-hidden="true"
+                    className={`absolute top-1/2 left-0 h-6 w-[3px] -translate-y-1/2 rounded-full bg-accent transition-opacity ${
+                      isActive ? "opacity-100" : "opacity-0"
+                    }`}
+                  />
+                  <span className={`font-mono text-sm font-bold ${isActive ? "text-accent" : "text-dim"}`}>{pad(i + 1)}</span>
+                  <span className="min-w-0 flex-1">
+                    <span className={`block font-display text-[17px] leading-snug ${isActive ? "text-paper" : "text-mist group-hover:text-paper"}`}>
+                      {mod.title}
+                    </span>
+                    <span className="block text-xs text-dim">{mod.duration}</span>
+                  </span>
+                  <span className={`transition-all ${isActive ? "text-accent opacity-100" : "-translate-x-1 opacity-0"}`}>
+                    <Arrow />
+                  </span>
+                </button>
+              );
+            })}
           </div>
-        </nav>
 
-        <div className="mt-6 grid gap-10 lg:mt-14 lg:grid-cols-[320px_1fr] lg:gap-12">
-          {/* Desktop: sticky module list */}
-          <nav aria-label="Curriculum modules" className="hidden lg:block">
-            <ol className="sticky top-8 space-y-1">
-              {curriculum.map((m, i) => {
-                const isActive = i === active;
-                return (
-                  <li key={m.title}>
-                    <a
-                      href={`#${moduleId(i)}`}
-                      aria-current={isActive ? "true" : undefined}
-                      className={`group relative block rounded-2xl px-5 py-3.5 transition-colors ${
-                        isActive ? "bg-ink-deep" : "hover:bg-ink-raised/60"
-                      }`}
-                    >
-                      <span
-                        aria-hidden="true"
-                        className={`absolute top-1/2 left-0 h-7 w-[3px] -translate-y-1/2 rounded-full bg-accent transition-opacity ${
-                          isActive ? "opacity-100" : "opacity-0"
-                        }`}
-                      />
-                      <span
-                        className={`block font-display text-[17px] font-semibold transition-colors ${
-                          isActive ? "text-accent" : "text-paper"
-                        }`}
-                      >
-                        Module {i + 1}
-                      </span>
-                      <span className={`mt-0.5 block text-sm ${isActive ? "text-mist" : "text-dim group-hover:text-mist"}`}>
-                        {m.title}
-                      </span>
-                    </a>
-                  </li>
-                );
-              })}
-            </ol>
-          </nav>
+          <div
+            role="tabpanel"
+            id="curriculum-panel"
+            aria-labelledby={`curriculum-tab-${active}`}
+            className="flex flex-col rounded-3xl bg-ink p-5 sm:p-8 lg:min-h-[600px]"
+          >
+            <div key={active} className="flex-1 animate-fade-up motion-reduce:animate-none">
+              <div className="flex flex-wrap items-center gap-3">
+                <span className="font-mono text-sm font-bold tracking-[0.12em] text-accent uppercase">Module {pad(active + 1)}</span>
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-ink-line px-3 py-1 text-xs text-mist">
+                  <Clock />
+                  {m.duration}
+                </span>
+                <span className="font-mono text-xs text-dim">{weekRange(active)}</span>
+              </div>
+              <h3 className="mt-4 font-display text-[clamp(1.75rem,3vw,2.5rem)] leading-[1.1] font-light">{m.title}</h3>
+              <p className="mt-3 max-w-2xl text-base leading-relaxed text-mist/85">{m.summary}</p>
 
-          {/* Module cards */}
-          <div className="space-y-8">
-            {curriculum.map((m, i) => (
-              <article
-                key={m.title}
-                id={moduleId(i)}
-                ref={(el) => {
-                  cardsRef.current[i] = el;
-                }}
-                className="scroll-mt-20 lg:scroll-mt-8"
-              >
-                <header className="flex items-center gap-4 rounded-3xl bg-accent px-5 py-4 text-ink-deep sm:px-6 sm:py-5">
-                  <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-ink-deep/10 font-display text-lg font-bold">
-                    {String(i + 1).padStart(2, "0")}
+              {m.project && (
+                <div className="mt-6 flex items-center gap-4 rounded-2xl border border-accent/25 bg-accent/[0.06] p-4">
+                  <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-accent text-ink-deep" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" className="size-5">
+                      <path d="M5 21V4m0 0h11l-2 4 2 4H5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+                    </svg>
                   </span>
-                  <h3 className="flex-1 font-display text-lg leading-snug font-semibold sm:text-2xl">
-                    <span className="sr-only">Module {i + 1}: </span>
-                    {m.title}
-                  </h3>
-                  <span className="hidden shrink-0 items-center gap-1.5 rounded-full bg-ink-deep px-3 py-1.5 text-xs font-semibold tracking-wider text-accent uppercase sm:flex">
-                    <Clock />
-                    {m.duration}
-                  </span>
-                </header>
-
-                <div className="mt-2 rounded-3xl bg-ink-deep p-5 sm:p-8">
-                  <p className="flex items-center gap-1.5 text-xs font-semibold tracking-wider text-accent uppercase sm:hidden">
-                    <Clock />
-                    {m.duration}
-                  </p>
-                  <p className="mt-3 text-base leading-relaxed text-mist sm:mt-0">{m.summary}</p>
-                  {m.project && (
-                    <p className="mt-5 text-base">
-                      <span className="font-semibold text-accent">Project: </span>
-                      {m.project}
-                    </p>
-                  )}
-
-                  <p className="mt-7 text-xs font-semibold tracking-[0.14em] text-dim uppercase">Topics covered</p>
-                  <div className="mt-4 grid gap-4 md:grid-cols-2">
-                    {m.topics.map((t) => (
-                      <div key={t.heading} className="rounded-2xl border border-ink-line p-5">
-                        <h4 className="border-l-2 border-accent pl-3 font-display text-base font-semibold">{t.heading}</h4>
-                        <ul className="mt-4 space-y-2.5">
-                          {t.items.map((item) => (
-                            <li key={item} className="flex gap-2.5 text-sm leading-snug text-muted">
-                              <span className="mt-[7px] size-1 shrink-0 rounded-full bg-dim" aria-hidden="true" />
-                              {item}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    ))}
+                  <div>
+                    <p className="font-mono text-[11px] tracking-[0.12em] text-accent uppercase">Project you&apos;ll ship</p>
+                    <p className="font-display text-lg leading-snug">{m.project}</p>
                   </div>
                 </div>
-              </article>
-            ))}
+              )}
+
+              <p className="mt-8 font-mono text-[11px] tracking-[0.14em] text-dim uppercase">Topics covered</p>
+              <div className="mt-4 grid gap-6 sm:grid-cols-2">
+                {m.topics.map((t) => (
+                  <div key={t.heading}>
+                    <h4 className="flex items-center gap-2 font-display text-base font-semibold">
+                      <span className="size-1.5 rounded-full bg-accent" aria-hidden="true" />
+                      {t.heading}
+                    </h4>
+                    <ul className="mt-3 flex flex-wrap gap-2">
+                      {t.items.map((item) => (
+                        <li key={item} className="rounded-full border border-ink-line px-3 py-1.5 text-sm leading-snug text-muted">
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Step through modules */}
+            <div className="mt-8 flex items-center justify-between gap-4 border-t border-ink-line pt-5">
+              <button
+                type="button"
+                onClick={() => setActive((a) => a - 1)}
+                disabled={active === 0}
+                className="inline-flex items-center gap-2 text-sm text-mist transition-colors hover:text-accent disabled:pointer-events-none disabled:opacity-30"
+              >
+                <Arrow back />
+                Previous
+              </button>
+              <span className="font-mono text-xs text-dim">
+                {pad(active + 1)} / {pad(n)}
+              </span>
+              <button
+                type="button"
+                onClick={() => setActive((a) => a + 1)}
+                disabled={active === n - 1}
+                className="inline-flex items-center gap-2 text-sm text-mist transition-colors hover:text-accent disabled:pointer-events-none disabled:opacity-30"
+              >
+                Next module
+                <Arrow />
+              </button>
+            </div>
           </div>
         </div>
       </div>

@@ -1,4 +1,6 @@
+import { CourseIntro } from "@/components/sections/CourseIntro";
 import { Curriculum } from "@/components/sections/Curriculum";
+import { Faq } from "@/components/sections/Faq";
 import { Footer } from "@/components/sections/Footer";
 import { FreeCourse } from "@/components/sections/FreeCourse";
 import { Hero } from "@/components/sections/Hero";
@@ -18,8 +20,10 @@ export default function Home() {
         <WhyFde />
         <Mentor />
         <FreeCourse />
+        <CourseIntro />
         <Curriculum />
         <Projects />
+        <Faq />
       </main>
       <Footer />
     </>
