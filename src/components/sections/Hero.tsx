@@ -3,7 +3,7 @@ import { CtaButton } from "@/components/ui/CtaButton";
 import { Marquee } from "@/components/ui/Marquee";
 import { HeroPanel } from "./HeroPanel";
 import { HeroVideo } from "./HeroVideo";
-import { Nav } from "./SiteHeader";
+import { Nav } from "./Nav";
 
 // Companies publicly building FDE teams (Business Insider, May 2026; Salesforce, Mar 2026).
 const hiringCompanies = ["OpenAI", "Anthropic", "Palantir", "Stripe", "Google Cloud", "Salesforce", "McKinsey", "BCG"];
