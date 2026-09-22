@@ -1,0 +1,80 @@
+@import "tailwindcss";
+
+/* Design tokens — mirrors the reference theme (dark ink, off-white paper, lilac accent). */
+@theme {
+  --color-ink-deep: #141414;
+  --color-ink: #222222;
+  --color-ink-raised: #2a2a2a;
+  --color-ink-line: #3a3a3a;
+  --color-paper: #f3efef;
+  --color-mist: #d9d9d9;
+  --color-muted: #c8c6c6;
+  --color-dim: #999999;
+  --color-lilac: #d6a3e4;
+  --color-lilac-light: #e3b2f1;
+  --color-lilac-deep: #b682c6;
+  --color-flame: #ff4529;
+  --color-sage: #c3d9c3;
+
+  --animate-marquee: marquee 40s linear infinite;
+
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+}
+
+/* Fonts are loaded by next/font in layout.tsx and exposed as CSS variables. */
+@theme inline {
+  --font-display: var(--font-urbanist), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-ink font-sans text-paper antialiased;
+  }
+
+  ::selection {
+    @apply bg-lilac text-ink-deep;
+  }
+}
+
+/*
+ * Section tab: a rounded-top label that sits on the top edge of a card and
+ * flows into it with an inverted fillet on its right side. Set --tab-bg to
+ * the card's colour.
+ */
+@utility notch-tab {
+  position: relative;
+  border-radius: 16px 16px 0 0;
+  background: var(--tab-bg);
+
+  &::after {
+    content: "";
+    position: absolute;
+    right: -16px;
+    bottom: 0;
+    width: 16px;
+    height: 16px;
+    background: radial-gradient(
+      circle at 100% 0,
+      transparent 15.5px,
+      var(--tab-bg) 16px
+    );
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee {
+    animation: none;
+  }
+}
