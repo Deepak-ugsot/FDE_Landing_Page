@@ -49,18 +49,17 @@ type PlayerMessage = { event?: string; info?: number | PlayerInfo };
  *
  * It stays invisible until it has been playing for a moment (past YouTube's
  * start-up overlay), so visitors never see a thumbnail, play/pause icon or skip
- * buttons — and nothing at all if autoplay is blocked. Hidden on small screens
- * and for reduced-motion users.
+ * buttons — and nothing at all if autoplay is blocked. On phones it sits behind
+ * the heading, full width and a little dimmer. Skipped for reduced-motion users.
  */
 export function HeroVideo() {
   const [src, setSrc] = useState<string | null>(null);
   const [visible, setVisible] = useState(false);
   const frameRef = useRef<HTMLIFrameElement>(null);
 
-  // Warm up connections, then insert the iframe when idle — lg+ screens only
-  // (a hidden iframe still downloads the ~1MB player, so skip it on phones).
+  // Warm up connections, then insert the iframe when idle (all screen sizes).
   useEffect(() => {
-    if (matchMedia("(prefers-reduced-motion: reduce)").matches || !matchMedia("(min-width: 1024px)").matches) return;
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     preconnect(YT_ORIGIN);
     preconnect("https://www.youtube.com");
     preconnect("https://i.ytimg.com");
@@ -134,7 +133,8 @@ export function HeroVideo() {
   return (
     <div
       aria-hidden="true"
-      className="pointer-events-none absolute top-20 right-0 hidden h-[640px] w-[56%] overflow-hidden [container-type:size] [mask-image:radial-gradient(ellipse_62%_58%_at_62%_46%,black_25%,transparent_75%)] lg:block motion-reduce:hidden!"
+      // Phones/tablets: full width behind the heading. Desktop: the right-hand 56%, as before.
+      className="pointer-events-none absolute inset-x-0 top-16 h-[560px] overflow-hidden [container-type:size] [mask-image:radial-gradient(ellipse_75%_60%_at_55%_42%,black_20%,transparent_75%)] sm:h-[640px] lg:top-20 lg:left-auto lg:w-[56%] lg:[mask-image:radial-gradient(ellipse_62%_58%_at_62%_46%,black_25%,transparent_75%)] motion-reduce:hidden!"
     >
       {src && (
         <iframe
@@ -149,7 +149,7 @@ export function HeroVideo() {
           // (= the old 1.25x overscale) to cover the box and crop YouTube's edge UI. Blur is applied
           // before the scale, so 1px here reads like the old 2px+.
           className={`absolute top-1/2 left-1/2 h-[max(50cqh,28.125cqw)] w-[max(50cqw,88.89cqh)] -translate-x-1/2 -translate-y-1/2 scale-250 -rotate-6 border-0 blur-[1px] grayscale-[35%] transition-opacity duration-1000 ease-out ${
-            visible ? "opacity-40" : "opacity-0"
+            visible ? "opacity-30 lg:opacity-40" : "opacity-0"
           }`}
         />
       )}
