@@ -196,7 +196,7 @@ export function Projects() {
                         style={{ opacity: i === 0 ? 1 : 0 }}
                       >
                         <div className="min-w-0">
-                          <h3 className="line-clamp-2 font-display text-xl sm:truncate font-medium sm:text-[28px] sm:leading-tight">
+                          <h3 className="line-clamp-2 font-display text-xl font-medium sm:text-[28px] sm:leading-tight">
                             {p.title}
                           </h3>
                           <Meta category={p.category} client={p.client} />

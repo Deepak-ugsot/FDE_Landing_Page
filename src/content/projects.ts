@@ -1,5 +1,5 @@
 // Featured projects for the Projects reel.
-// TODO: demo data — replace titles, tags, images and links with real learner projects.
+// TODO: category/domain tags are drawn from each project's name, and links are placeholders — confirm with the program team.
 export type Project = {
   title: string;
   category: string;
@@ -14,51 +14,51 @@ const unsplash = (id: string) => `https://images.unsplash.com/${id}?auto=format&
 
 export const projects: Project[] = [
   {
-    title: "Support Copilot for a Fintech Help Desk",
-    category: "Agentic AI",
-    client: "Demo client · Fintech",
-    image: unsplash("photo-1626863905121-3b0c0ed7b94c"),
-    imageAlt: "Two support agents wearing headsets in a bright office",
+    title: "AI Resume/Job-Description Matcher (ATS Scorer)",
+    category: "AI Application",
+    client: "Recruiting",
+    image: unsplash("photo-1698047681432-006d2449c631"),
+    imageAlt: "A woman reading a resume at a table",
     href: "#",
   },
   {
-    title: "Insurance Claims Document Intelligence",
-    category: "RAG",
-    client: "Demo client · Insurance",
-    image: unsplash("photo-1635859890085-ec8cb5466806"),
-    imageAlt: "A woman working through a table covered in paperwork",
+    title: "PickFlick — Group Movie Night Decision Solver",
+    category: "Decision Solver",
+    client: "Entertainment",
+    image: unsplash("photo-1758525862263-af89b090fb56"),
+    imageAlt: "Two friends watching television with a bowl of popcorn",
     href: "#",
   },
   {
-    title: "Voice Agent for Clinic Appointments",
-    category: "Voice AI",
-    client: "Demo client · Healthcare",
+    title: "AI Accessibility Auditor",
+    category: "AI Application",
+    client: "Web Accessibility",
+    image: unsplash("photo-1574887427561-d3d5d58c9273"),
+    imageAlt: "A person typing on a braille writer",
+    href: "#",
+  },
+  {
+    title: "MindMapAI — AI Idea-to-Structure Visual Thinking Tool",
+    category: "AI Application",
+    client: "Productivity",
+    image: unsplash("photo-1745847768382-816bfc32e1bb"),
+    imageAlt: "People looking at a mind map on a laptop screen",
+    href: "#",
+  },
+  {
+    title: "Employee Attendance & Payroll Processing Engine",
+    category: "Processing Engine",
+    client: "HR & Payroll",
+    image: unsplash("photo-1753955900478-323e4da1eff7"),
+    imageAlt: "Someone working through figures with a calculator and a laptop",
+    href: "#",
+  },
+  {
+    title: "Healthcare Appointment & Patient Queue Management System",
+    category: "Management System",
+    client: "Healthcare",
     image: unsplash("photo-1519494026892-80bbd2d6fd0d"),
     imageAlt: "A hospital lobby with a reception desk",
-    href: "#",
-  },
-  {
-    title: "Sales Research Agent",
-    category: "Multi-agent",
-    client: "Demo client · B2B SaaS",
-    image: unsplash("photo-1522071820081-009f0129c71c"),
-    imageAlt: "A team working together around laptops",
-    href: "#",
-  },
-  {
-    title: "Contract Review Assistant",
-    category: "LLM + Evals",
-    client: "Demo client · Legal",
-    image: unsplash("photo-1450101499163-c8848c66ca85"),
-    imageAlt: "A person reviewing and signing a document",
-    href: "#",
-  },
-  {
-    title: "Retail Demand Forecast Copilot",
-    category: "LLMOps",
-    client: "Demo client · Retail",
-    image: unsplash("photo-1722639096485-7f48cae22a87"),
-    imageAlt: "A grocery store aisle stocked with products",
     href: "#",
   },
 ];

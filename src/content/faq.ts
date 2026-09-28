@@ -1,12 +1,11 @@
-import { curriculum } from "./curriculum";
+import { curriculum, labsOf, modulesOf } from "./curriculum";
 import { mentorProfile, program } from "./program";
 
 // Answers only use facts stated elsewhere on the page.
 // TODO: confirm with the program team, and add questions on schedule (live vs recorded),
 // certificates and career support once those details are final.
-const weeksOf = (d: string) => parseInt(d, 10) || 0;
-const core = curriculum.filter((m) => weeksOf(m.duration));
-const coreWeeks = core.reduce((sum, m) => sum + weeksOf(m.duration), 0);
+const moduleCount = curriculum.reduce((sum, p) => sum + modulesOf(p).length, 0);
+const labCount = curriculum.reduce((sum, p) => sum + labsOf(p).length, 0);
 
 export const faqs = [
   {
@@ -19,15 +18,16 @@ export const faqs = [
   },
   {
     q: "Do I need prior AI or machine learning experience?",
-    a: "The curriculum starts from how LLMs work and includes a Python & APIs module, so the foundations are covered before you move on to RAG, agents and deployment.",
+    a: "No. The curriculum starts with the FDE role and Python fundamentals, then builds up through LLMs, RAG and agents to deployment, system design and the FDE craft.",
   },
   {
     q: "How long is the program?",
-    a: `${core.length} core modules over ${coreWeeks} weeks, plus self-paced interview electives in system design and data structures that you can take alongside.`,
+    // TODO: add the program's duration in weeks once it's confirmed.
+    a: `${curriculum.length} phases and ${moduleCount} modules, with ${labCount} hands-on labs along the way.`,
   },
   {
     q: "What will I build?",
-    a: "A project in every core module, from an AI interview coach and a chat-with-your-documents system to an autonomous agent, ending with a full client engagement run end to end.",
+    a: `${labCount} hands-on labs across the phases, from a Northstar data pipeline and orders API to an AI support copilot, an enterprise support agent and a full production deployment, plus an Autonomous Business Operations Agent project.`,
   },
   {
     q: `Is the course really free? What does the ${program.platformPrice} cover?`,

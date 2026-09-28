@@ -1,42 +1,24 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { curriculum } from "@/content/curriculum";
+import { curriculum, modulesOf } from "@/content/curriculum";
 import { CardTab } from "@/components/ui/CardTab";
 
 const n = curriculum.length;
 const pad = (i: number) => String(i).padStart(2, "0");
-const weeksOf = (duration: string) => parseInt(duration, 10) || 0;
-const totalWeeks = curriculum.reduce((sum, m) => sum + weeksOf(m.duration), 0);
-const projectCount = curriculum.filter((m) => m.project).length;
-
-// Week each core module starts in; self-paced modules run alongside the core.
-const startWeek: number[] = [];
-let week = 1;
-for (const m of curriculum) {
-  startWeek.push(week);
-  week += weeksOf(m.duration);
-}
-const weekRange = (i: number) => {
-  const w = weeksOf(curriculum[i].duration);
-  if (!w) return "Alongside the core modules";
-  return w === 1 ? `Week ${startWeek[i]}` : `Weeks ${startWeek[i]}–${startWeek[i] + w - 1}`;
-};
+const moduleCount = curriculum.reduce((sum, p) => sum + modulesOf(p).length, 0);
+const topicCount = curriculum.reduce((sum, p) => sum + modulesOf(p).reduce((t, m) => t + m.topics.length, 0), 0);
 
 const stats = [
-  { value: n, label: "Modules" },
-  { value: totalWeeks, label: "Weeks" },
-  { value: projectCount, label: "Projects shipped" },
+  { value: n, label: "Phases" },
+  { value: moduleCount, label: "Modules" },
+  { value: topicCount, label: "Topics" },
 ];
 
-function Clock() {
-  return (
-    <svg viewBox="0 0 24 24" className="size-3.5" aria-hidden="true">
-      <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" strokeWidth="2" />
-      <path d="M12 7v5l3 2" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-    </svg>
-  );
-}
+const phaseMeta = (i: number) => {
+  const count = modulesOf(curriculum[i]).length;
+  return `${count} module${count === 1 ? "" : "s"}`;
+};
 
 function Arrow({ back = false }: { back?: boolean }) {
   return (
@@ -46,55 +28,37 @@ function Arrow({ back = false }: { back?: boolean }) {
   );
 }
 
-/** Summary, project and topics for one module (shared by the desktop panel and the phone accordion). */
-function ModuleBody({ index }: { index: number }) {
-  const m = curriculum[index];
+/** One phase's modules and topics, in teaching order (shared by the desktop panel and the phone accordion). */
+function PhaseBody({ index }: { index: number }) {
   return (
-    <>
-      <p className="max-w-2xl text-base leading-relaxed text-mist/85">{m.summary}</p>
-
-      {m.project && (
-        <div className="mt-6 flex items-center gap-4 rounded-2xl border border-accent/25 bg-accent/[0.06] p-4">
-          <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-accent text-ink-deep" aria-hidden="true">
-            <svg viewBox="0 0 24 24" className="size-5">
-              <path d="M5 21V4m0 0h11l-2 4 2 4H5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
-            </svg>
-          </span>
-          <div>
-            <p className="font-mono text-[11px] tracking-[0.12em] text-accent uppercase">Project you&apos;ll ship</p>
-            <p className="font-display text-lg leading-snug">{m.project}</p>
-          </div>
-        </div>
-      )}
-
-      <p className="mt-8 font-mono text-[11px] tracking-[0.14em] text-dim uppercase">Topics covered</p>
-      <div className="mt-4 grid gap-6 sm:grid-cols-2">
-        {m.topics.map((t) => (
-          <div key={t.heading}>
-            <h4 className="flex items-center gap-2 font-display text-base font-semibold">
-              <span className="size-1.5 rounded-full bg-accent" aria-hidden="true" />
-              {t.heading}
-            </h4>
-            <ul className="mt-3 flex flex-wrap gap-2">
-              {t.items.map((item) => (
-                <li key={item} className="rounded-full border border-ink-line px-3 py-1.5 text-sm leading-snug text-muted">
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </div>
-    </>
+    <ol className="grid items-start gap-3 xl:grid-cols-2">
+      {modulesOf(curriculum[index]).map((mod, i) => (
+        <li key={mod.title} className="rounded-2xl border border-ink-line/70 bg-ink-raised/30 p-5">
+          <h4 className="flex items-baseline gap-3 font-display text-lg leading-snug">
+            <span className="font-mono text-xs font-bold text-accent">
+              {index + 1}.{i + 1}
+            </span>
+            {mod.title}
+          </h4>
+          <ul className="mt-3 flex flex-wrap gap-1.5">
+            {mod.topics.map((topic) => (
+              <li key={topic} className="rounded-full border border-ink-line px-2.5 py-1 text-[13px] leading-snug text-muted">
+                {topic}
+              </li>
+            ))}
+          </ul>
+        </li>
+      ))}
+    </ol>
   );
 }
 
 /**
- * Phone / tablet layout: each module is a card on a thin timeline spine. Tapping
+ * Phone / tablet layout: each phase is a card on a thin timeline spine. Tapping
  * one slides its details open (grid 0fr → 1fr) and closes the others; the opened
  * card's header is then brought back into view if the close above pushed it off.
  */
-function ModuleAccordion() {
+function PhaseAccordion() {
   const [open, setOpen] = useState<number | null>(0);
   const headersRef = useRef<(HTMLButtonElement | null)[]>([]);
 
@@ -114,11 +78,11 @@ function ModuleAccordion() {
       {/* Timeline spine running through the number badges */}
       <span aria-hidden="true" className="absolute top-6 bottom-6 left-[36px] w-px bg-ink-line" />
       <ol className="relative flex flex-col gap-3">
-        {curriculum.map((mod, i) => {
+        {curriculum.map((phase, i) => {
           const isOpen = open === i;
           return (
             <li
-              key={mod.title}
+              key={phase.title}
               className={`overflow-hidden rounded-2xl border transition-[border-color,background-color,box-shadow] duration-500 ${
                 isOpen
                   ? "border-accent/30 bg-ink bg-[linear-gradient(160deg,rgba(235,255,85,0.07),transparent_45%)] shadow-[0_20px_50px_-30px_rgba(235,255,85,0.35)]"
@@ -145,17 +109,11 @@ function ModuleAccordion() {
                     {pad(i + 1)}
                   </span>
                   <span className="min-w-0 flex-1">
+                    <span className="block font-mono text-[10px] tracking-[0.14em] text-dim uppercase">Phase {pad(i + 1)}</span>
                     <span className={`block font-display text-[17px] leading-snug transition-colors ${isOpen ? "text-paper" : "text-mist"}`}>
-                      {mod.title}
+                      {phase.title}
                     </span>
-                    <span className="mt-1 flex flex-wrap items-center gap-x-2 font-mono text-[11px] text-dim">
-                      <span className="inline-flex items-center gap-1">
-                        <Clock />
-                        {mod.duration}
-                      </span>
-                      {weeksOf(mod.duration) > 0 && <span aria-hidden="true">·</span>}
-                      {weeksOf(mod.duration) > 0 && <span>{weekRange(i)}</span>}
-                    </span>
+                    <span className="mt-1 block font-mono text-[11px] text-dim">{phaseMeta(i)}</span>
                   </span>
                   {/* Plus → minus */}
                   <span
@@ -187,7 +145,7 @@ function ModuleAccordion() {
                       isOpen ? "opacity-100 delay-150" : "opacity-0"
                     }`}
                   >
-                    <ModuleBody index={i} />
+                    <PhaseBody index={i} />
                   </div>
                 </div>
               </div>
@@ -200,15 +158,23 @@ function ModuleAccordion() {
 }
 
 /**
- * Curriculum: one card with the module list and the selected module's
- * details, instead of every module being expanded down the page.
+ * Curriculum: one card with the phase list and the selected phase's modules,
+ * instead of every phase being expanded down the page.
  */
 export function Curriculum() {
   const [active, setActive] = useState(0);
   const tabsRef = useRef<(HTMLButtonElement | null)[]>([]);
-  const m = curriculum[active];
+  const panelRef = useRef<HTMLDivElement>(null);
+  const p = curriculum[active];
 
-  // Roving focus for the module list (↑/↓, Home/End), per the WAI-ARIA tabs pattern.
+  // Phases can be long: when switching, bring the panel's top back into view if it scrolled away.
+  const select = (i: number) => {
+    setActive(i);
+    const top = panelRef.current?.getBoundingClientRect().top ?? 0;
+    if (top < 0) window.scrollBy({ top: top - 24, behavior: "smooth" });
+  };
+
+  // Roving focus for the phase list (↑/↓, Home/End), per the WAI-ARIA tabs pattern.
   const onKeyDown = (e: React.KeyboardEvent) => {
     const keys: Record<string, number> = { ArrowDown: active + 1, ArrowUp: active - 1, Home: 0, End: n - 1 };
     if (!(e.key in keys)) return;
@@ -239,14 +205,20 @@ export function Curriculum() {
           </dl>
         </div>
 
-        {/* Desktop: module list + selected module */}
+        {/* Desktop: phase list (sticky while a long phase scrolls) + selected phase */}
         <div className="mt-10 hidden gap-10 lg:grid lg:grid-cols-[320px_1fr]">
-          <div role="tablist" aria-label="Curriculum modules" aria-orientation="vertical" className="flex flex-col gap-1" onKeyDown={onKeyDown}>
-            {curriculum.map((mod, i) => {
+          <div
+            role="tablist"
+            aria-label="Curriculum phases"
+            aria-orientation="vertical"
+            className="flex flex-col gap-1 self-start lg:sticky lg:top-24"
+            onKeyDown={onKeyDown}
+          >
+            {curriculum.map((phase, i) => {
               const isActive = i === active;
               return (
                 <button
-                  key={mod.title}
+                  key={phase.title}
                   ref={(el) => {
                     tabsRef.current[i] = el;
                   }}
@@ -256,7 +228,7 @@ export function Curriculum() {
                   aria-selected={isActive}
                   aria-controls="curriculum-panel"
                   tabIndex={isActive ? 0 : -1}
-                  onClick={() => setActive(i)}
+                  onClick={() => select(i)}
                   className={`group relative flex w-full items-center gap-4 rounded-2xl px-4 py-3 text-left transition-colors ${
                     isActive ? "bg-ink-raised" : "hover:bg-ink-raised/50"
                   }`}
@@ -270,9 +242,9 @@ export function Curriculum() {
                   <span className={`font-mono text-sm font-bold ${isActive ? "text-accent" : "text-dim"}`}>{pad(i + 1)}</span>
                   <span className="min-w-0 flex-1">
                     <span className={`block font-display text-[17px] leading-snug ${isActive ? "text-paper" : "text-mist group-hover:text-paper"}`}>
-                      {mod.title}
+                      {phase.title}
                     </span>
-                    <span className="block text-xs text-dim">{mod.duration}</span>
+                    <span className="block text-xs text-dim">{phaseMeta(i)}</span>
                   </span>
                   <span className={`transition-all ${isActive ? "text-accent opacity-100" : "-translate-x-1 opacity-0"}`}>
                     <Arrow />
@@ -283,31 +255,26 @@ export function Curriculum() {
           </div>
 
           <div
+            ref={panelRef}
             role="tabpanel"
             id="curriculum-panel"
             aria-labelledby={`curriculum-tab-${active}`}
-            className="flex flex-col rounded-3xl bg-ink p-5 sm:p-8 lg:min-h-[600px]"
+            className="flex scroll-mt-24 flex-col rounded-3xl bg-ink p-5 sm:p-8 lg:min-h-[600px]"
           >
             <div key={active} className="flex-1 animate-fade-up motion-reduce:animate-none">
               <div className="flex flex-wrap items-center gap-3">
-                <span className="font-mono text-sm font-bold tracking-[0.12em] text-accent uppercase">Module {pad(active + 1)}</span>
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-ink-line px-3 py-1 text-xs text-mist">
-                  <Clock />
-                  {m.duration}
-                </span>
-                <span className="font-mono text-xs text-dim">{weekRange(active)}</span>
+                <span className="font-mono text-sm font-bold tracking-[0.12em] text-accent uppercase">Phase {pad(active + 1)}</span>
+                <span className="rounded-full border border-ink-line px-3 py-1 text-xs text-mist">{phaseMeta(active)}</span>
               </div>
-              <h3 className="mt-4 font-display text-[clamp(1.75rem,3vw,2.5rem)] leading-[1.1] font-light">{m.title}</h3>
-              <div className="mt-3">
-                <ModuleBody index={active} />
-              </div>
+              <h3 className="mt-4 mb-8 font-display text-[clamp(1.75rem,3vw,2.5rem)] leading-[1.1] font-light">{p.title}</h3>
+              <PhaseBody index={active} />
             </div>
 
-            {/* Step through modules */}
+            {/* Step through phases */}
             <div className="mt-8 flex items-center justify-between gap-4 border-t border-ink-line pt-5">
               <button
                 type="button"
-                onClick={() => setActive((a) => a - 1)}
+                onClick={() => select(active - 1)}
                 disabled={active === 0}
                 className="inline-flex items-center gap-2 text-sm text-mist transition-colors hover:text-accent disabled:pointer-events-none disabled:opacity-30"
               >
@@ -319,11 +286,11 @@ export function Curriculum() {
               </span>
               <button
                 type="button"
-                onClick={() => setActive((a) => a + 1)}
+                onClick={() => select(active + 1)}
                 disabled={active === n - 1}
                 className="inline-flex items-center gap-2 text-sm text-mist transition-colors hover:text-accent disabled:pointer-events-none disabled:opacity-30"
               >
-                Next module
+                Next phase
                 <Arrow />
               </button>
             </div>
@@ -331,7 +298,7 @@ export function Curriculum() {
         </div>
 
         {/* Phone / tablet: accordion */}
-        <ModuleAccordion />
+        <PhaseAccordion />
       </div>
     </section>
   );
