@@ -35,13 +35,16 @@ export function Hero() {
           </span>
         </h1>
 
-        <p className="mt-8 max-w-xl text-base leading-relaxed text-mist sm:text-lg">
-          Learn to take AI from a promising demo to a system a real business runs on. Scope the problem with the client,
-          build it across the stack, ship it into their environment, and own the outcome.
-        </p>
+        <div className="mt-8 max-w-xl space-y-4 text-base leading-relaxed text-mist sm:text-lg">
+          <p>Learn how to take AI from an interesting prototype to a system that works inside a real business.</p>
+          <p>
+            Learn to identify the right problem, work with stakeholders, design the solution, build across the stack,
+            deploy into real environments, and take ownership of the outcome.
+          </p>
+        </div>
 
         <div className="mt-8 flex flex-wrap items-center gap-3">
-          <CtaButton href={program.applyHref}>Apply now</CtaButton>
+          <CtaButton href={program.applyHref}>Explore the program</CtaButton>
           <a
             href={program.brochureHref}
             className="inline-flex h-12 items-center rounded-2xl border border-ink-line px-5 text-base font-medium transition-colors hover:border-paper"
@@ -49,6 +52,10 @@ export function Hero() {
             Download brochure
           </a>
         </div>
+
+        <p className="mt-4 font-display text-sm font-medium tracking-wide text-dim sm:text-base">
+          Discover. Build. Deploy. Own.
+        </p>
 
         <HeroPanel />
 

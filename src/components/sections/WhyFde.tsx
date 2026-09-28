@@ -7,6 +7,37 @@ import { MarketSignal } from "./MarketSignal";
 const ink = "var(--color-ink)";
 const inkDeep = "var(--color-ink-deep)";
 
+// What businesses need from an FDE, shown as an icon list beside the intro.
+const capabilities = [
+  {
+    title: "Understand the problem",
+    body: "Work directly with stakeholders to identify where AI can create meaningful value.",
+    icon: (
+      <>
+        <circle cx="11" cy="11" r="7" />
+        <path d="m20 20-3.5-3.5" />
+      </>
+    ),
+  },
+  {
+    title: "Build the solution",
+    body: "Turn an idea into a working system across models, software, data, and infrastructure.",
+    icon: <path d="m16 18 6-6-6-6M8 6l-6 6 6 6" />,
+  },
+  {
+    title: "Deploy it for real",
+    body: "Navigate the constraints of an actual business environment and make the system usable.",
+    icon: <path d="M12 15V3m-5 5 5-5 5 5M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4" />,
+  },
+  {
+    title: "Own what happens next",
+    body: "Measure results, iterate, improve reliability, and keep the system working.",
+    icon: (
+      <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8m0-5v5h-5m5 4a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16m5 0H3v5" />
+    ),
+  },
+];
+
 // The theory, revealed on scroll: what the role is, where it came from, why it matters now.
 const theory = [
   "A Forward Deployed Engineer works embedded with the customer: scoping the problem, building across the stack, shipping into their environment and owning the outcome.",
@@ -20,12 +51,12 @@ export function WhyFde() {
       {/* Seam with the hero card: a tab rises into it, and the card continues down on the right. */}
       <div className="absolute inset-x-0 top-0">
         <div className="mx-auto max-w-[1328px] px-5 sm:px-8 lg:px-12">
-          <div className="relative -mt-14 flex h-14 w-fit items-center gap-3 rounded-t-3xl bg-ink px-5 font-display text-lg font-extrabold tracking-tight sm:-mt-16 sm:h-16 sm:px-6 sm:text-2xl">
+          <div className="relative -mt-14 flex h-14 w-fit items-center gap-3 rounded-t-3xl bg-ink px-5 font-display text-base font-extrabold tracking-tight sm:-mt-16 sm:h-16 sm:px-6 sm:text-2xl">
             <InverseCorner at="tl" color={ink} className="bottom-0 -left-6" />
             <InverseCorner at="tr" color={ink} className="-right-6 bottom-0" />
             <span className="size-2.5 shrink-0 rounded-full bg-accent" aria-hidden="true" />
             <span className="whitespace-nowrap">
-              Why Forward Deployed Engineer<span className="hidden sm:inline"> (FDE)</span>?
+              Why Forward Deployed Engineering?
             </span>
           </div>
         </div>
@@ -36,17 +67,66 @@ export function WhyFde() {
 
       <div className="mx-auto max-w-[1328px] px-5 sm:px-8 lg:px-12">
         {/* Intro */}
-        <div className="grid gap-8 lg:grid-cols-[1.3fr_1fr] lg:items-end">
-          <h2 className="font-display text-[clamp(2.25rem,5vw,3.5rem)] leading-[1.02] font-light tracking-[-0.01em]">
-            AI is easy to demo.
-            <br />
-            <span className="text-dim">It&apos;s hard to deploy.</span>
-          </h2>
-          <p className="max-w-md text-base leading-relaxed text-mist lg:justify-self-end">
-            Companies have the models. What they lack are engineers who can walk into a real business, understand how it
-            works, and make AI hold up there. That engineer has a name now.
-          </p>
+        <div className="grid gap-14 lg:grid-cols-[1.1fr_1fr] lg:gap-20">
+          {/* Left: the problem */}
+          <div>
+            <h2 className="font-display text-[clamp(2.25rem,5vw,3.5rem)] leading-[1.02] font-light tracking-[-0.01em]">
+              Building the demo
+              <br />
+              <span className="text-dim">is only the beginning.</span>
+            </h2>
+            <div className="mt-8 max-w-lg space-y-4 text-base leading-relaxed text-mist">
+              <p className="text-paper">AI can look impressive in a prototype.</p>
+              <p>
+                The real challenge begins when you have to connect it to existing systems, work with imperfect data,
+                handle real users, meet business requirements, and make it reliable enough to use every day.
+              </p>
+            </div>
+            <p className="mt-8 flex items-center gap-3 font-display text-lg font-medium text-accent sm:text-xl">
+              <span className="h-px w-8 shrink-0 bg-accent" aria-hidden="true" />
+              That&apos;s where the Forward Deployed Engineer comes in.
+            </p>
+          </div>
+
+          {/* Right: what businesses need, as an icon list */}
+          <div>
+            <h3 className="font-display text-2xl font-normal">From possibility to production.</h3>
+            <p className="mt-3 text-base leading-relaxed text-mist">
+              Businesses don&apos;t just need people who can experiment with AI. They need engineers who can:
+            </p>
+            <ul className="mt-8 divide-y divide-ink-line border-t border-ink-line">
+              {capabilities.map((c) => (
+                <li key={c.title} className="flex gap-5 py-6">
+                  <span className="flex size-12 shrink-0 items-center justify-center rounded-full border border-ink-line text-accent">
+                    <svg
+                      viewBox="0 0 24 24"
+                      className="size-5"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      aria-hidden="true"
+                    >
+                      {c.icon}
+                    </svg>
+                  </span>
+                  <div>
+                    <h4 className="font-display text-lg font-medium text-paper">{c.title}</h4>
+                    <p className="mt-1 text-base leading-relaxed text-mist/70">{c.body}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
+
+        {/* Closing line */}
+        <p className="mt-8 border-t border-ink-line pt-8 font-display text-[clamp(1.75rem,3.6vw,3rem)] leading-[1.1] font-light tracking-[-0.01em] lg:mt-10 lg:pt-10">
+          <span className="text-dim">The future of AI isn&apos;t just about better models.</span>
+          <br />
+          It&apos;s about <span className="text-accent">better deployment.</span>
+        </p>
 
         {/* Theory: pinned, revealed character by character on scroll */}
         <ScrollRevealText label="What is an FDE?" sentences={theory} />
