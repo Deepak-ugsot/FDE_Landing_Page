@@ -45,12 +45,6 @@ export function Hero() {
 
         <div className="mt-8 flex flex-wrap items-center gap-3">
           <CtaButton href={program.applyHref}>Explore the program</CtaButton>
-          <a
-            href={program.brochureHref}
-            className="inline-flex h-12 items-center rounded-2xl border border-ink-line px-5 text-base font-medium transition-colors hover:border-paper"
-          >
-            Download brochure
-          </a>
         </div>
 
         <p className="mt-4 font-display text-sm font-medium tracking-wide text-dim sm:text-base">
