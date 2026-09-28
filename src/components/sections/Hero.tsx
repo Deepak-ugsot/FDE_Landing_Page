@@ -21,13 +21,11 @@ export function Hero() {
       <Nav />
 
       <div className="relative mx-auto max-w-[1328px] px-5 pt-6 sm:px-8 lg:px-12 lg:pt-10">
-        <p className="flex items-center gap-2.5 font-display text-sm font-bold sm:text-base">
-          <span className="size-2 rounded-full bg-accent" aria-hidden="true" />
-          {program.focus} · Cohort program
-        </p>
-
-        <h1 className="mt-5 font-display text-[clamp(2.9rem,8.4vw,6.25rem)] leading-[0.92] font-light tracking-[-0.02em]">
+        <h1 className="mt-2 font-display text-[clamp(2.9rem,8.4vw,6.25rem)] leading-[0.92] font-light tracking-[-0.02em]">
           AI Forward Deployed Engineer Program
+          <span className="mt-5 block text-[clamp(1.35rem,2.6vw,2rem)] leading-snug tracking-normal text-mist">
+            AI that moves from demo to deployment.
+          </span>
           <span className="mt-6 flex items-center gap-4 text-[clamp(1.5rem,3vw,2.25rem)] leading-none tracking-normal">
             <span className="h-px w-12 bg-accent" aria-hidden="true" />
             <span className="text-dim">by</span>
@@ -45,11 +43,13 @@ export function Hero() {
 
         <div className="mt-8 flex flex-wrap items-center gap-3">
           <CtaButton href={program.applyHref}>Explore the program</CtaButton>
+          <a
+            href={program.brochureHref}
+            className="inline-flex h-12 items-center rounded-2xl border border-ink-line px-5 text-base font-medium transition-colors hover:border-paper"
+          >
+            Download brochure
+          </a>
         </div>
-
-        <p className="mt-4 font-display text-sm font-medium tracking-wide text-dim sm:text-base">
-          Discover. Build. Deploy. Own.
-        </p>
 
         <HeroPanel />
 
