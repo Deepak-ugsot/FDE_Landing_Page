@@ -7,17 +7,20 @@ const roles = [
   {
     step: "Build",
     title: "Software Engineering",
-    body: "Build production-ready systems.",
+    headline: "Turn ideas into working systems.",
+    body: "Design and build production-ready applications using software, data, AI models, and modern engineering practices.",
   },
   {
     step: "Deploy",
     title: "Platform Engineering",
-    body: "Make them reliable, scalable and usable.",
+    headline: "Make them work in the real world.",
+    body: "Integrate systems into existing environments, handle real-world constraints, and build for reliability, scale, and usability.",
   },
   {
     step: "Solve",
     title: "Solutions Architecture",
-    body: "Adapt them to real-world problems.",
+    headline: "Solve the problem, not just the technical task.",
+    body: "Work with stakeholders to understand the underlying problem, adapt the solution to the environment, and continuously improve it based on what actually happens in production.",
   },
 ];
 
@@ -57,10 +60,10 @@ function Spinner({ active }: { active: boolean }) {
 function RoleCard({ index, active }: { index: number; active: boolean }) {
   const r = roles[index];
   return (
-    <div className="relative mx-auto w-full max-w-[225px] text-left">
+    <div className="relative mx-auto h-full w-full max-w-[260px] text-left">
       {/* Glass card: a 1px gradient border layer with the fill layer inset inside it */}
       <div
-        className={`relative aspect-[5/4] transition-all md:aspect-[6/7] duration-700 ${active ? "-translate-y-1" : ""}`}
+        className={`relative h-full transition-all duration-700 ${active ? "-translate-y-1" : ""}`}
         style={{
           clipPath: cardShape,
           background: active
@@ -69,7 +72,7 @@ function RoleCard({ index, active }: { index: number; active: boolean }) {
         }}
       >
         <div
-          className="absolute inset-px overflow-hidden"
+          className="relative m-px h-[calc(100%-2px)] overflow-hidden"
           style={{
             clipPath: cardShape,
             background:
@@ -93,9 +96,14 @@ function RoleCard({ index, active }: { index: number; active: boolean }) {
                 0{index + 1} · {r.step}
               </span>
             </div>
-            <p className="mt-auto mb-10 text-xs leading-snug text-mist/80">
-              {r.body}
-            </p>
+            <div className="mt-8 mb-12">
+              <p className="font-display text-base leading-snug font-medium text-paper">
+                {r.headline}
+              </p>
+              <p className="mt-2 text-xs leading-relaxed text-mist/75">
+                {r.body}
+              </p>
+            </div>
           </div>
         </div>
         {/* The folded corner */}
@@ -195,11 +203,17 @@ export function WhoIsFde() {
               Engineer?
             </span>
           </h3>
-          <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-mist/80">
-            This role combines building, deploying and owning AI systems. It
-            spans software, platforms and solutions. It exists to make AI work
-            beyond demos.
-          </p>
+          <div className="mx-auto mt-4 max-w-2xl space-y-2 text-base leading-relaxed text-mist/80">
+            <p className="text-paper">
+              A Forward Deployed Engineer sits where technology meets the real
+              world.
+            </p>
+            <p>
+              They combine technical depth with problem-solving, customer
+              context, and ownership — taking an idea all the way from a
+              business problem to a working system.
+            </p>
+          </div>
         </div>
         {/* Desktop / tablet: cards → merging connectors → result */}
         <div className="mx-auto hidden max-w-[980px] md:block">
@@ -261,7 +275,7 @@ export function WhoIsFde() {
         </div>
 
         {/* Phone: stacked cards on one spine */}
-        <div className="relative mx-auto flex max-w-[240px] flex-col items-center gap-8 md:hidden">
+        <div className="relative mx-auto flex max-w-[280px] flex-col items-center gap-8 md:hidden">
           <span
             className="absolute top-0 bottom-0 left-1/2 w-px -translate-x-1/2 bg-white/14"
             aria-hidden="true"

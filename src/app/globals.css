@@ -63,6 +63,9 @@
   }
 }
 
+/* Pointer devices at desktop width, where cards can reveal extra copy on hover. Touch screens keep it visible. */
+@custom-variant hover-reveal (@media (hover: hover) and (min-width: 64rem));
+
 /* Fonts are loaded by next/font in layout.tsx and exposed as CSS variables. */
 @theme inline {
   --font-display: var(--font-urbanist), ui-sans-serif, system-ui, sans-serif;

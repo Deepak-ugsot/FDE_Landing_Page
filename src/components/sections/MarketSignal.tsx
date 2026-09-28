@@ -4,18 +4,25 @@ import { useEffect, useRef } from "react";
 import { CtaButton } from "@/components/ui/CtaButton";
 import { lerpRect, roundedUnionPath, type Rect } from "@/lib/roundedUnion";
 
-// Every figure is sourced; keep the footnote links in sync when editing.
-const stats = [
-  { value: "729%", label: "Year-over-year growth in FDE job postings on Indeed", accent: true },
-  { value: "1,000", label: "The FDE team Salesforce has committed to building" },
-  { value: "$170K+", label: "US pay for FDE roles, running past $200K" },
-  { value: "95%", label: "of enterprise GenAI pilots showed no measurable P&L impact" },
-];
-
-const sources = [
-  { label: "Indeed via Business Insider, May 2026", href: "https://www.aol.com/articles/job-postings-tech-role-grown-185134000.html" },
-  { label: "Salesforce, Mar 2026", href: "https://www.salesforce.com/ap/blog/forward-deployed-engineer/" },
-  { label: "MIT NANDA via Fortune, Aug 2025", href: "https://fortune.com/2025/08/18/mit-report-95-percent-generative-ai-pilots-at-companies-failing-cfo" },
+// Why the role is in demand, shown in the stepped cluster (xl+) or a card grid.
+const points = [
+  {
+    title: "AI adoption is accelerating",
+    body: "Businesses are moving beyond experimentation and looking for people who can turn AI capabilities into working systems.",
+    accent: true,
+  },
+  {
+    title: "The deployment gap is growing",
+    body: "Knowing how to use an AI model is different from engineering a reliable solution around it.",
+  },
+  {
+    title: "Production skills matter",
+    body: "The value of AI comes from what actually gets adopted, used, and integrated into a business.",
+  },
+  {
+    title: "The role is evolving",
+    body: "Forward Deployed Engineering sits at the intersection of software, AI, product, and the customer.",
+  },
 ];
 
 /*
@@ -28,7 +35,7 @@ const sources = [
 const RADIUS = 24;
 const CORNER = { x: 640, y: 560 };
 const STAT_POS = [
-  { left: 64, top: 90, width: 200 },
+  { left: 60, top: 88, width: 216 },
   { left: 306, top: 202, width: 270 },
   { left: 24, top: 334, width: 270 },
   { left: 350, top: 446, width: 262 },
@@ -59,7 +66,7 @@ function clusterRects(t: number): Rect[] {
   // Each later block starts as the small square where it joins the one before.
   if (g3 > 0) rects.push(lerpRect([300, 420, 330, 450], [0, 300, 330, 450], g3));
   if (g2 > 0) rects.push(lerpRect([200, 300, 330, 330], [200, 180, 600, 330], g2));
-  if (g1 > 0) rects.push(lerpRect([200, 180, 280, 220], [40, 70, 280, 220], g1));
+  if (g1 > 0) rects.push(lerpRect([200, 180, 280, 220], [40, 70, 296, 220], g1));
   return rects;
 }
 
@@ -68,9 +75,9 @@ const DELAY_MS = 250;
 const DURATION_MS = 1200;
 
 /**
- * "Our vision"-style card: copy on the left, a stepped dark cluster of stats
+ * "Our vision"-style card: copy on the left, a stepped dark cluster of points
  * on the right that breaks out of the card's corner. When the cluster scrolls
- * into view it grows out of the corner block by block (once), and the stats
+ * into view it grows out of the corner block by block (once), and the points
  * are uncovered by the same shape, like the reference's logo mask.
  */
 export function MarketSignal({ applyHref }: { applyHref: string }) {
@@ -124,13 +131,20 @@ export function MarketSignal({ applyHref }: { applyHref: string }) {
     };
   }, []);
 
-  const statContent = (stat: (typeof stats)[number]) => (
+  const pointContent = (point: (typeof points)[number]) => (
     <>
-      <span className={`block font-display text-[44px] leading-none font-light tracking-tight ${stat.accent ? "text-accent" : "text-paper"}`}>
-        {stat.value}
+      <span className={`block font-display text-lg leading-tight font-medium ${point.accent ? "text-accent" : "text-paper"}`}>
+        {point.title}
       </span>
-      <span className="mt-2 block text-[13px] leading-snug text-muted/80">{stat.label}</span>
+      <span className="mt-1.5 block text-[13px] leading-snug text-muted/80">{point.body}</span>
     </>
+  );
+
+  const opportunityLabel = (
+    <p className="flex items-center gap-2.5 font-display text-base font-bold">
+      <span className="size-2 rounded-full bg-accent-deep" aria-hidden="true" />
+      The opportunity
+    </p>
   );
 
   return (
@@ -142,37 +156,34 @@ export function MarketSignal({ applyHref }: { applyHref: string }) {
             The market signal
           </p>
           <h3 className="mt-4 font-display text-[clamp(2.4rem,4.4vw,3.5rem)] leading-[1.02] font-normal tracking-[-0.01em]">
-            The fastest-rising role in tech
+            The market is moving from AI experiments to AI in production
           </h3>
-          <p className="mt-6 text-base leading-relaxed text-ink-deep/75">
-            Companies can buy models off the shelf. What they can&apos;t buy is the engineer who makes those models work
-            inside their business. That gap is why FDE hiring has taken off, and why people who can do the job are
-            scarce.
-          </p>
-          <div className="mt-8">
-            <CtaButton href={applyHref}>Apply now</CtaButton>
+          <div className="mt-6 space-y-4 text-base leading-relaxed text-ink-deep/75">
+            <p>
+              AI models are increasingly accessible. The harder problem is making them work inside real businesses —
+              with real data, real systems, real users, and real constraints.
+            </p>
+            <p>
+              That is creating demand for a new kind of engineer: someone who can understand the business problem, build
+              the solution, deploy it in the real world, and stay accountable for what happens next.
+            </p>
           </div>
-          <p className="mt-8 text-xs leading-relaxed text-ink-deep/50">
-            Sources:{" "}
-            {sources.map((s, i) => (
-              <span key={s.href}>
-                <a href={s.href} target="_blank" rel="noopener noreferrer" className="underline-offset-2 hover:underline">
-                  {s.label}
-                </a>
-                {i < sources.length - 1 ? " · " : ""}
-              </span>
-            ))}
-          </p>
+          <div className="mt-8">
+            <CtaButton href={applyHref}>Apply to the next cohort</CtaButton>
+          </div>
         </div>
 
-        {/* Below xl: simple 2x2 grid of dark stat cards */}
-        <ul className="mt-12 grid gap-3 sm:grid-cols-2 xl:hidden">
-          {stats.map((stat) => (
-            <li key={stat.value} className="rounded-3xl bg-ink p-6">
-              {statContent(stat)}
-            </li>
-          ))}
-        </ul>
+        {/* Below xl: simple 2x2 grid of dark cards */}
+        <div className="mt-12 xl:hidden">
+          {opportunityLabel}
+          <ul className="mt-5 grid gap-3 sm:grid-cols-2">
+            {points.map((point) => (
+              <li key={point.title} className="rounded-3xl bg-ink p-6">
+                {pointContent(point)}
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
 
       {/* xl+: stepped cluster anchored to (and spilling past) the bottom-right corner */}
@@ -180,11 +191,12 @@ export function MarketSignal({ applyHref }: { applyHref: string }) {
         <svg viewBox="0 0 700 620" className="absolute inset-0 size-full" aria-hidden="true">
           <path ref={pathRef} d={START_PATH} fill="var(--color-ink)" />
         </svg>
-        {/* Stats are masked by the same outline, so they appear as the shape grows under them. */}
+        {/* Points are masked by the same outline, so they appear as the shape grows under them. */}
+        <div className="absolute top-8 left-[60px]">{opportunityLabel}</div>
         <ul ref={statsRef} className="absolute inset-0" style={{ clipPath: `path("${START_PATH}")` }}>
-          {stats.map((stat, i) => (
-            <li key={stat.value} className="absolute" style={STAT_POS[i]}>
-              {statContent(stat)}
+          {points.map((point, i) => (
+            <li key={point.title} className="absolute" style={STAT_POS[i]}>
+              {pointContent(point)}
             </li>
           ))}
         </ul>
