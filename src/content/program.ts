@@ -2,12 +2,13 @@
 export const program = {
   name: "AI Forward Deployed Engineer Program",
   mentor: "Vishwa Mohan",
+  institution: "upGrad School of Technology",
   focus: "Applied GenAI & Agentic AI",
   nextCohort: "Dates announcing soon", // TODO: real cohort start date
   applyHref: "#apply", // TODO: application form URL
   brochureHref: "#brochure", // TODO: brochure PDF URL
   privacyHref: "#privacy", // TODO: privacy statement page
-  youtubeHref: "https://www.youtube.com/@VishwaMohan-00", // TODO: link to the course playlist once it's live
+  youtubeHref: "https://www.youtube.com/@upGrad_edu", // TODO: link to the course playlist once it's live
   // Course intro video, autoplayed (muted) when its section scrolls into view. Set ONE of these:
   introVideoSrc: "", // TODO: a file in /public, e.g. "/assets/course-intro.mp4" (preferred: no YouTube branding)
   introVideoId: "Zmz5gE9nJqY", // or a YouTube video ID (the part after "watch?v=")
@@ -19,7 +20,7 @@ export const program = {
 
 // Official channels shown in the footer.
 export const socials = [
-  { label: "YouTube", href: "https://www.youtube.com/@VishwaMohan-00", tone: "flame" },
+  { label: "YouTube", href: "https://www.youtube.com/@upGrad_edu", tone: "flame" },
   { label: "LinkedIn", href: "https://www.linkedin.com/in/vishwa-mohan/", tone: "accent" },
 ] as const;
 

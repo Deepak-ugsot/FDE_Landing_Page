@@ -26,10 +26,12 @@ export function Hero() {
           <span className="mt-5 block text-[clamp(1.35rem,2.6vw,2rem)] leading-snug tracking-normal text-mist">
             AI that moves from demo to deployment.
           </span>
-          <span className="mt-6 flex items-center gap-4 text-[clamp(1.5rem,3vw,2.25rem)] leading-none tracking-normal">
-            <span className="h-px w-12 bg-accent" aria-hidden="true" />
-            <span className="text-dim">by</span>
-            <span className="text-accent">{program.mentor}</span>
+          <span className="mt-6 flex items-start gap-4 text-[clamp(1.5rem,3vw,2.25rem)] leading-tight tracking-normal">
+            <span className="mt-[0.625em] h-px w-12 shrink-0 bg-accent" aria-hidden="true" />
+            <span>
+              <span className="text-dim">by</span> {program.institution} <span className="text-dim">with</span>{" "}
+              <span className="whitespace-nowrap text-accent">{program.mentor}</span>
+            </span>
           </span>
         </h1>
 
