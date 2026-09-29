@@ -1,20 +1,22 @@
 @import "tailwindcss";
 
-/* Design tokens — mirrors the reference theme (dark ink, off-white paper, lime accent, matching litheum.com). */
+/* Design tokens — dark theme: black/gray ink, off-white paper, red accent. */
 @theme {
-  --color-ink-deep: #141414;
-  --color-ink: #222222;
+  --color-ink-deep: #121212;
+  --color-ink: #000000;
   --color-ink-raised: #2a2a2a;
   --color-ink-line: #3a3a3a;
   --color-paper: #f3efef;
   --color-mist: #d9d9d9;
   --color-muted: #c8c6c6;
   --color-dim: #999999;
-  --color-accent: #ebff55;
-  --color-accent-light: #f3ff8f;
-  --color-accent-deep: #c9dd2e;
-  --color-flame: #ff4529;
-  --color-sage: #c3d9c3;
+  --color-accent: #e6161f;
+  --color-accent-light: #f23a42;
+  --color-accent-deep: #b81118;
+  /* Text/icons sitting on an accent fill. */
+  --color-on-accent: #ffffff;
+  --color-flame: #e6161f;
+  --color-sage: #a3a3a3;
 
   --animate-marquee: marquee 40s linear infinite;
   --animate-line-pulse: line-pulse 1.5s cubic-bezier(0.45, 0, 0.3, 1) both;
@@ -83,7 +85,7 @@
   }
 
   ::selection {
-    @apply bg-accent text-ink-deep;
+    @apply bg-accent text-on-accent;
   }
 }
 

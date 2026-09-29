@@ -21,7 +21,7 @@ const logoTone = {
 } as const;
 
 const photoGlow =
-  "bg-[radial-gradient(120%_90%_at_78%_100%,rgba(235,255,85,0.42)_0%,rgba(235,255,85,0.08)_45%,#1a1a17_78%)]";
+  "bg-[radial-gradient(120%_90%_at_78%_100%,rgba(230,22,31,0.42)_0%,rgba(230,22,31,0.08)_45%,#1a1a17_78%)]";
 
 function Photo({ className = "" }: { className?: string }) {
   return (

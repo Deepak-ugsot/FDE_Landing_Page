@@ -220,7 +220,7 @@ export function WhyFde() {
               {/* Accent wash that fades in on hover */}
               <span
                 aria-hidden="true"
-                className="absolute inset-0 -z-10 bg-[linear-gradient(160deg,rgba(235,255,85,0),rgba(235,255,85,0.12))] opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+                className="absolute inset-0 -z-10 bg-[linear-gradient(160deg,rgba(230,22,31,0),rgba(230,22,31,0.12))] opacity-0 transition-opacity duration-500 group-hover:opacity-100"
               />
               <svg
                 viewBox="0 0 24 24"
@@ -236,7 +236,7 @@ export function WhyFde() {
               </svg>
               <span
                 aria-hidden="true"
-                className="absolute top-6 right-6 flex size-8 items-center justify-center rounded-full bg-white/10 text-paper transition-colors duration-500 group-hover:bg-accent group-hover:text-ink-deep"
+                className="absolute top-6 right-6 flex size-8 items-center justify-center rounded-full bg-white/10 text-paper transition-colors duration-500 group-hover:bg-accent group-hover:text-on-accent"
               >
                 <svg
                   viewBox="0 0 24 24"

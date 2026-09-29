@@ -18,7 +18,7 @@ const columns = [
 ];
 
 const socialTone = {
-  flame: "bg-flame hover:bg-[#ff6a52]",
+  flame: "bg-flame hover:bg-accent-light",
   accent: "bg-accent hover:bg-accent-light",
 } as const;
 
@@ -44,7 +44,7 @@ export function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="rounded-t-[32px] bg-accent text-ink-deep">
+    <footer className="rounded-t-[32px] bg-accent text-on-accent">
       {/* CTA marquee band */}
       <Marquee className="py-12 lg:py-16">
         {[0, 1].map((k) => (
@@ -75,7 +75,7 @@ export function Footer() {
         <div className="grid gap-14 px-6 pt-14 pb-10 sm:px-10 lg:grid-cols-[38%_1fr] lg:gap-0 lg:px-16 lg:pt-16">
           {/* Newsletter */}
           <div className="lg:pr-16">
-            <Logo className="size-14" />
+            <Logo className="h-14 w-auto" />
             <h2 className="mt-10 flex gap-3 font-display text-2xl leading-snug font-normal">
               <span className="mt-3 size-2.5 shrink-0 rounded-full bg-flame" aria-hidden="true" />
               Want cohort dates and program updates?
@@ -112,7 +112,7 @@ export function Footer() {
                 </span>
               </label>
               <div className="pt-6">
-                <button type="submit" className="group inline-flex items-center text-base font-medium text-ink-deep">
+                <button type="submit" className="group inline-flex items-center text-base font-medium text-on-accent">
                   <span className="flex size-12 items-center justify-center rounded-2xl bg-accent transition-colors group-hover:bg-accent-light">
                     <Sparkle />
                   </span>
@@ -153,7 +153,7 @@ export function Footer() {
                     href={s.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={`flex h-12 w-[150px] items-center justify-center rounded-lg text-base font-medium text-ink-deep transition-colors ${socialTone[s.tone]}`}
+                    className={`flex h-12 w-[150px] items-center justify-center rounded-lg text-base font-medium text-on-accent transition-colors ${socialTone[s.tone]}`}
                   >
                     {s.label}
                   </a>
@@ -179,7 +179,7 @@ export function Footer() {
             <a
               href="#top"
               aria-label="Back to top"
-              className="grid size-12 place-items-center rounded-2xl bg-[#1a1a1a] transition-colors hover:bg-ink-raised"
+              className="grid size-12 place-items-center rounded-2xl bg-ink-raised transition-colors hover:bg-ink-line"
             >
               <svg viewBox="0 0 24 24" className="size-4" aria-hidden="true">
                 <path d="M12 20V5m-6 6 6-6 6 6" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />

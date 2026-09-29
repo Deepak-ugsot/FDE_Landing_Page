@@ -1,9 +1,6 @@
-/** Placeholder brand mark: an "F" whose middle stroke is a forward arrow. Swap for the real logo later. */
-export function Logo({ className = "size-12" }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 48 48" className={className} aria-hidden="true">
-      <rect width="48" height="48" rx="11" fill="var(--color-accent)" />
-      <path d="M14 11h20v6H20v5h8.5v-4.5L37 24l-8.5 6.5V26H20v11h-6V11Z" fill="var(--color-ink-deep)" />
-    </svg>
-  );
+import Image from "next/image";
+
+/** upGrad School of Technology wordmark (wide, ~3.25:1). Size it by height, e.g. "h-12 w-auto". */
+export function Logo({ className = "h-12 w-auto" }: { className?: string }) {
+  return <Image src="/assets/usotlogo.png" alt="" aria-hidden="true" width={182} height={56} priority className={className} />;
 }

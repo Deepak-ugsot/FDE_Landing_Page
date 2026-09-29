@@ -109,7 +109,7 @@ export function Nav() {
       {/* In-flow nav inside the hero card */}
       <nav ref={navRef} aria-label="Main" className="relative flex items-center justify-between px-5 py-6 sm:px-8">
         <a href="#top" aria-label={homeLabel}>
-          <Logo className="size-12 sm:size-14" />
+          <Logo className="h-12 w-auto sm:h-14" />
         </a>
 
         <ul className="hidden items-center gap-5 text-[15px] lg:flex">
@@ -126,7 +126,7 @@ export function Nav() {
                 {link.label}
                 <span
                   aria-hidden="true"
-                  className="absolute inset-0 -z-10 rounded-lg bg-[linear-gradient(315deg,rgba(235,255,85,0.16),rgba(235,255,85,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100"
+                  className="absolute inset-0 -z-10 rounded-lg bg-[linear-gradient(315deg,rgba(230,22,31,0.16),rgba(230,22,31,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100"
                 />
               </a>
             </li>
@@ -143,8 +143,13 @@ export function Nav() {
           stuck ? "translate-y-0 opacity-100" : "-translate-y-3 opacity-0"
         }`}
       >
-        <a href="#top" aria-label={homeLabel} tabIndex={stuck ? 0 : -1} className={stuck ? "pointer-events-auto" : ""}>
-          <Logo className="size-12" />
+        <a
+          href="#top"
+          aria-label={homeLabel}
+          tabIndex={stuck ? 0 : -1}
+          className={`rounded-2xl bg-ink-deep/90 px-3 py-1.5 ring-1 ring-white/10 backdrop-blur ${stuck ? "pointer-events-auto" : ""}`}
+        >
+          <Logo className="h-9 w-auto" />
         </a>
         <MenuButton
           open={open}
@@ -169,7 +174,7 @@ export function Nav() {
         aria-modal="true"
         aria-label="Site menu"
         inert={!open}
-        className={`fixed top-3 right-3 z-[60] w-[min(320px,calc(100vw-1.5rem))] origin-top-right rounded-3xl bg-accent p-7 pt-6 text-ink-deep shadow-2xl transition-all duration-300 sm:right-6 lg:right-8 ${
+        className={`fixed top-3 right-3 z-[60] w-[min(320px,calc(100vw-1.5rem))] origin-top-right rounded-3xl bg-accent p-7 pt-6 text-on-accent shadow-2xl transition-all duration-300 sm:right-6 lg:right-8 ${
           open ? "scale-100 opacity-100" : "pointer-events-none scale-95 opacity-0"
         }`}
       >
@@ -182,7 +187,7 @@ export function Nav() {
               <a
                 href={link.href}
                 onClick={close}
-                className="block rounded-xl py-1.5 font-display text-2xl leading-tight transition-opacity outline-offset-4 hover:opacity-60 focus-visible:outline-2 focus-visible:outline-ink-deep"
+                className="block rounded-xl py-1.5 font-display text-2xl leading-tight transition-opacity outline-offset-4 hover:opacity-60 focus-visible:outline-2 focus-visible:outline-on-accent"
               >
                 {link.label}
               </a>

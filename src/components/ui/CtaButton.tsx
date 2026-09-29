@@ -3,7 +3,7 @@ import { Sparkle } from "./Sparkle";
 type Variant = "accent" | "paper" | "ink";
 
 const tones: Record<Variant, string> = {
-  accent: "bg-accent text-ink-deep group-hover:bg-accent-light",
+  accent: "bg-accent text-on-accent group-hover:bg-accent-light",
   paper: "bg-paper text-ink-deep group-hover:bg-white",
   ink: "bg-ink-deep text-paper group-hover:bg-black",
 };

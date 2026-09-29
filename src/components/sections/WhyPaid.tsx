@@ -57,11 +57,11 @@ export function WhyPaid() {
           >
             <span
               aria-hidden="true"
-              className="absolute inset-0 -z-10 rounded-[inherit] bg-[linear-gradient(135deg,rgba(235,255,85,0),rgba(235,255,85,0.07))] transition-opacity duration-500"
+              className="absolute inset-0 -z-10 rounded-[inherit] bg-[linear-gradient(135deg,rgba(230,22,31,0),rgba(230,22,31,0.07))] transition-opacity duration-500"
             />
             <span
               aria-hidden="true"
-              className="absolute inset-0 -z-10 rounded-[inherit] bg-[linear-gradient(135deg,rgba(235,255,85,0),rgba(235,255,85,0.16))] opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+              className="absolute inset-0 -z-10 rounded-[inherit] bg-[linear-gradient(135deg,rgba(230,22,31,0),rgba(230,22,31,0.16))] opacity-0 transition-opacity duration-500 group-hover:opacity-100"
             />
             <h3 className="font-display text-[clamp(1.6rem,2.4vw,2.25rem)] leading-tight font-normal">{p.title}</h3>
             <p className="max-w-md text-base leading-relaxed text-paper/60">{p.body}</p>

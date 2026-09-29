@@ -67,7 +67,7 @@ function RoleCard({ index, active }: { index: number; active: boolean }) {
         style={{
           clipPath: cardShape,
           background: active
-            ? "linear-gradient(160deg, rgba(235,255,85,0.55), rgba(255,255,255,0.08) 45%, rgba(255,255,255,0.14))"
+            ? "linear-gradient(160deg, rgba(230,22,31,0.55), rgba(255,255,255,0.08) 45%, rgba(255,255,255,0.14))"
             : "linear-gradient(160deg, rgba(255,255,255,0.28), rgba(255,255,255,0.06) 45%, rgba(255,255,255,0.12))",
         }}
       >
@@ -136,12 +136,12 @@ function ResultPill({ lit }: { lit: boolean }) {
     <div
       className={`relative inline-flex items-center gap-3 rounded-full border bg-gradient-to-b from-[#2a2a2a] to-[#111] py-2 pr-5 pl-2 transition-[border-color,box-shadow] duration-500 ${
         lit
-          ? "border-accent/50 shadow-[0_0_40px_-6px_rgba(235,255,85,0.45)]"
+          ? "border-accent/50 shadow-[0_0_40px_-6px_rgba(230,22,31,0.45)]"
           : "border-white/12 shadow-none"
       }`}
     >
       <span
-        className="flex size-7 items-center justify-center rounded-full bg-accent text-ink-deep"
+        className="flex size-7 items-center justify-center rounded-full bg-accent text-on-accent"
         aria-hidden="true"
       >
         <svg viewBox="0 0 24 24" className="size-4">
@@ -248,7 +248,7 @@ export function WhoIsFde() {
                     strokeWidth="2.5"
                     strokeLinecap="round"
                     strokeDasharray="0.22 1"
-                    className="animate-line-pulse drop-shadow-[0_0_6px_rgba(235,255,85,0.8)] motion-reduce:hidden"
+                    className="animate-line-pulse drop-shadow-[0_0_6px_rgba(230,22,31,0.8)] motion-reduce:hidden"
                   />
                 )}
               </g>

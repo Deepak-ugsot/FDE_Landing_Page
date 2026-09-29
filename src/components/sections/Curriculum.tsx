@@ -85,7 +85,7 @@ function PhaseAccordion() {
               key={phase.title}
               className={`overflow-hidden rounded-2xl border transition-[border-color,background-color,box-shadow] duration-500 ${
                 isOpen
-                  ? "border-accent/30 bg-ink bg-[linear-gradient(160deg,rgba(235,255,85,0.07),transparent_45%)] shadow-[0_20px_50px_-30px_rgba(235,255,85,0.35)]"
+                  ? "border-accent/30 bg-ink bg-[linear-gradient(160deg,rgba(230,22,31,0.07),transparent_45%)] shadow-[0_20px_50px_-30px_rgba(230,22,31,0.35)]"
                   : "border-ink-line/70 bg-ink"
               }`}
             >
@@ -103,7 +103,7 @@ function PhaseAccordion() {
                 >
                   <span
                     className={`flex size-10 shrink-0 items-center justify-center rounded-xl font-mono text-sm font-bold transition-colors duration-500 ${
-                      isOpen ? "bg-accent text-ink-deep" : "bg-ink-raised text-dim"
+                      isOpen ? "bg-accent text-on-accent" : "bg-ink-raised text-dim"
                     }`}
                   >
                     {pad(i + 1)}
@@ -119,7 +119,7 @@ function PhaseAccordion() {
                   <span
                     aria-hidden="true"
                     className={`relative flex size-8 shrink-0 items-center justify-center rounded-full border transition-colors duration-500 ${
-                      isOpen ? "border-accent bg-accent text-ink-deep" : "border-ink-line text-mist"
+                      isOpen ? "border-accent bg-accent text-on-accent" : "border-ink-line text-mist"
                     }`}
                   >
                     <span className="absolute h-[1.5px] w-3 rounded-full bg-current" />

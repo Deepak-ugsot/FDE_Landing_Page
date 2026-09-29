@@ -132,7 +132,7 @@ export function CourseIntro() {
               type="button"
               onClick={toggleSound}
               aria-pressed={!muted}
-              className="absolute right-4 bottom-4 inline-flex items-center gap-2 rounded-full bg-black/60 px-3.5 py-2 text-xs font-medium text-paper backdrop-blur transition-colors hover:bg-accent hover:text-ink-deep sm:right-6 sm:bottom-6"
+              className="absolute right-4 bottom-4 inline-flex items-center gap-2 rounded-full bg-black/60 px-3.5 py-2 text-xs font-medium text-paper backdrop-blur transition-colors hover:bg-accent hover:text-on-accent sm:right-6 sm:bottom-6"
             >
               <SoundIcon muted={muted} />
               {muted ? "Tap for sound" : "Mute"}
