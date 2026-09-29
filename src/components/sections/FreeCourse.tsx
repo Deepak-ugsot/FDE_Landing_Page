@@ -9,36 +9,75 @@ import { InverseCorner } from "@/components/ui/InverseCorner";
 const YT_RED = "#ff0033";
 const inkDeep = "var(--color-ink-deep)";
 
-type Dot = {
-  homeX: number;
-  homeY: number;
-  x: number;
-  y: number;
-  size: number;
-  alpha: number;
+// 3D mark tuning.
+const PERSPECTIVE = 1400; // camera distance, px
+const TILT_Y = 0.3; // max turn left/right towards the pointer, rad
+const TILT_X = 0.42; // max tilt up/down towards the pointer, rad
+const PUSH_RADIUS = 90; // dots within this distance of the pointer shy away
+const PUSH = 10; // how far they move at the centre, px
+const INTRO_MS = 1400; // dots fly in and settle into the mark
+const DOT = 0.6; // dot size as a fraction of the grid pitch
+
+/**
+ * The YouTube mark as an extruded 3D shape made of a regular grid of dots:
+ * a bright front face plus side walls that darken as they go back. Coordinates
+ * are relative to the mark's centre; z runs from -depth/2 (front) to +depth/2.
+ */
+type Mark = {
+  count: number;
+  x: Float32Array;
+  y: Float32Array;
+  z: Float32Array;
+  r: Uint8Array;
+  g: Uint8Array;
+  b: Uint8Array;
+  /** Brightest channel, used to keep the brightest dot when several land on one pixel. */
+  lum: Uint8Array;
+  /** Where each dot starts during the intro, as an offset from its place. */
+  jx: Float32Array;
+  jy: Float32Array;
+  halfW: number;
+  halfH: number;
   depth: number;
-  phase: number;
-  /** Motion scale: 1 on desktop, smaller for fine phone grids so letters stay legible. */
-  scale: number;
-  rgb: string;
+  /** Grid pitch, px. */
+  step: number;
 };
 
 type Dust = { x: number; y: number; originX: number; originY: number; size: number; alpha: number; drift: number; phase: number };
 
+const EMPTY_MARK: Mark = {
+  count: 0,
+  x: new Float32Array(0),
+  y: new Float32Array(0),
+  z: new Float32Array(0),
+  r: new Uint8Array(0),
+  g: new Uint8Array(0),
+  b: new Uint8Array(0),
+  lum: new Uint8Array(0),
+  jx: new Float32Array(0),
+  jy: new Float32Array(0),
+  halfW: 0,
+  halfH: 0,
+  depth: 0,
+  step: 1,
+};
+
 /**
- * Draws the YouTube mark (red play button + wordmark) into a w×h offscreen
- * canvas centred on (cx, cy), at most `maxFont` px tall, and returns one dot
- * per sampled grid cell that has ink, coloured like the pixel underneath it.
+ * Draws the YouTube mark (red play button + white wordmark) into a w×h
+ * offscreen canvas centred on (cx, cy), at most `maxFont` px tall, samples it
+ * on a regular grid and extrudes it: every inked cell becomes a front dot, and
+ * every cell on the outline also gets a column of wall dots going back in z.
  */
-function sampleMark(w: number, h: number, cx: number, cy: number, maxFont: number, fontFamily: string) {
+function sampleMark(w: number, h: number, cx: number, cy: number, maxFont: number, fontFamily: string): Mark {
   const c = document.createElement("canvas");
   c.width = Math.max(1, Math.round(w));
   c.height = Math.max(1, Math.round(h));
   const ctx = c.getContext("2d", { willReadFrequently: true });
-  if (!ctx) return [];
+  if (!ctx) return EMPTY_MARK;
 
-  // Size the mark so logo + gap + word fill at most ~82% of the width (90% on phones).
-  const maxW = w * (w < 640 ? 0.9 : 0.82);
+  // Size the mark so logo + gap + word fill at most ~78% of the width (88% on phones),
+  // leaving room for the perspective to widen it when it turns.
+  const maxW = w * (w < 640 ? 0.88 : 0.78);
   let font = maxFont;
   ctx.font = `700 ${font}px ${fontFamily}`;
   const unit = () => {
@@ -59,7 +98,7 @@ function sampleMark(w: number, h: number, cx: number, cy: number, maxFont: numbe
   ctx.beginPath();
   ctx.roundRect(left, cy - m.logoH / 2, m.logoW, m.logoH, m.logoH * 0.28);
   ctx.fill();
-  // Triangle is cut out, so it reads as the dark background through the red dots.
+  // Triangle is cut out, so it gets its own inner walls.
   ctx.globalCompositeOperation = "destination-out";
   const tx = left + m.logoW * 0.39;
   const th = m.logoH * 0.48;
@@ -75,34 +114,99 @@ function sampleMark(w: number, h: number, cx: number, cy: number, maxFont: numbe
   ctx.textBaseline = "middle";
   ctx.fillText("YouTube", left + m.logoW + m.gap, cy + font * 0.04);
 
-  const step = Math.max(3, Math.min(6, Math.round(font / 34)));
-  const scale = Math.min(1, step / 6);
+  // Occupancy grid: 0 = empty, 1 = red (play button), 2 = white (wordmark).
+  const step = Math.max(2, Math.min(4, font / 80));
+  const cols = Math.floor(c.width / step);
+  const rows = Math.floor(c.height / step);
   const data = ctx.getImageData(0, 0, c.width, c.height).data;
-  const dots: Dot[] = [];
-  for (let y = 0; y < c.height; y += step) {
-    for (let x = 0; x < c.width; x += step) {
-      const i = (y * c.width + x) * 4;
+  const cells = new Uint8Array(cols * rows);
+  let inked = 0;
+  for (let row = 0; row < rows; row++) {
+    for (let col = 0; col < cols; col++) {
+      const i = (Math.round(row * step) * c.width + Math.round(col * step)) * 4;
       if (data[i + 3] < 120) continue;
-      dots.push({
-        homeX: x,
-        homeY: y,
-        x: x + (Math.random() - 0.5) * 18,
-        y: y + (Math.random() - 0.5) * 18,
-        size: (1 + 2 * Math.random()) * Math.max(0.7, scale),
-        alpha: 0.5 + 0.36 * Math.random(),
-        depth: 0.72 + 0.7 * Math.random(),
-        phase: Math.random() * Math.PI * 2,
-        scale,
-        rgb: `${data[i]}, ${data[i + 1]}, ${data[i + 2]}`,
-      });
+      cells[row * cols + col] = data[i + 1] < 128 ? 1 : 2;
+      inked++;
     }
   }
-  return dots;
+  const filled = (col: number, row: number) =>
+    col >= 0 && row >= 0 && col < cols && row < rows && cells[row * cols + col] !== 0;
+
+  const depth = font * 0.3;
+  const layers = Math.max(4, Math.round(depth / step));
+  const edge = new Uint8Array(cols * rows);
+  let edges = 0;
+  for (let row = 0; row < rows; row++) {
+    for (let col = 0; col < cols; col++) {
+      if (!cells[row * cols + col]) continue;
+      if (!filled(col - 1, row) || !filled(col + 1, row) || !filled(col, row - 1) || !filled(col, row + 1)) {
+        edge[row * cols + col] = 1;
+        edges++;
+      }
+    }
+  }
+
+  const count = inked + edges * layers;
+  const mark: Mark = {
+    count,
+    x: new Float32Array(count),
+    y: new Float32Array(count),
+    z: new Float32Array(count),
+    r: new Uint8Array(count),
+    g: new Uint8Array(count),
+    b: new Uint8Array(count),
+    lum: new Uint8Array(count),
+    jx: new Float32Array(count),
+    jy: new Float32Array(count),
+    halfW: 0,
+    halfH: 0,
+    depth,
+    step,
+  };
+
+  // Front / wall / back-rim colours for each kind of cell.
+  const tone = (kind: number, shade: number): [number, number, number] =>
+    kind === 1 ? [255 * shade, 20 * shade, 60 * shade] : [238 * shade, 238 * shade, 242 * shade];
+
+  let n = 0;
+  const push = (x: number, y: number, z: number, rgb: [number, number, number]) => {
+    mark.x[n] = x;
+    mark.y[n] = y;
+    mark.z[n] = z;
+    mark.r[n] = rgb[0];
+    mark.g[n] = rgb[1];
+    mark.b[n] = rgb[2];
+    mark.lum[n] = Math.max(rgb[0], rgb[1], rgb[2]);
+    mark.jx[n] = (Math.random() - 0.5) * 160;
+    mark.jy[n] = (Math.random() - 0.5) * 120;
+    mark.halfW = Math.max(mark.halfW, Math.abs(x));
+    mark.halfH = Math.max(mark.halfH, Math.abs(y));
+    n++;
+  };
+
+  for (let row = 0; row < rows; row++) {
+    for (let col = 0; col < cols; col++) {
+      const kind = cells[row * cols + col];
+      if (!kind) continue;
+      const x = col * step - cx;
+      const y = row * step - cy;
+      const isEdge = edge[row * cols + col] === 1;
+      push(x, y, -depth / 2, tone(kind, isEdge ? 1 : 0.86));
+      if (!isEdge) continue;
+      for (let k = 1; k <= layers; k++) {
+        // Walls fade as they go back; the back rim catches a little light again.
+        const shade = k === layers ? 0.42 : 0.5 - 0.3 * (k / layers);
+        push(x, y, -depth / 2 + (k * depth) / layers, tone(kind, shade));
+      }
+    }
+  }
+  return mark;
 }
 
 /**
- * Free-course callout. The YouTube mark is drawn as a field of drifting dots
- * that shy away from the pointer, while the whole field tilts towards it — the same interaction as the reference's "code" panel.
+ * Free-course callout. The YouTube mark is an extruded 3D shape built from a
+ * dense grid of dots that turns to face the pointer (like chillbase.net's
+ * hero "B"); dots near the pointer shy away, and faint dust drifts behind it.
  */
 export function FreeCourse() {
   const panelRef = useRef<HTMLDivElement>(null);
@@ -115,37 +219,62 @@ export function FreeCourse() {
     const panel = panelRef.current;
     const plane = planeRef.current;
     const canvas = canvasRef.current;
-    const mark = markRef.current;
+    const markEl = markRef.current;
     const ctx = canvas?.getContext("2d");
-    if (!panel || !plane || !canvas || !mark || !ctx) return;
+    // The mark is rasterised by hand into this buffer, then drawn onto the main canvas.
+    const layer = document.createElement("canvas");
+    const lctx = layer.getContext("2d");
+    if (!panel || !plane || !canvas || !markEl || !ctx || !lctx) return;
 
     const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
     let w = 1;
     let h = 1;
+    let dpr = 1;
     let markY = 0;
-    let dots: Dot[] = [];
+    let mark = EMPTY_MARK;
     let dust: Dust[] = [];
+    // Layer rectangle (css px, relative to the panel) and its pixel buffers.
+    const region = { x: 0, y: 0, w: 1, h: 1, pw: 1, ph: 1 };
+    let image: ImageData | null = null;
+    let pixels = new Uint32Array(0);
+    let lit = new Uint8Array(0);
     let raf = 0;
     let visible = false;
     let disposed = false;
+    let introStart = -1;
     const pointer = { x: 0, y: 0, active: false };
+    const eased = { x: 0, y: 0, strength: 0 };
     const tilt = { x: 0, y: 0 };
     const tiltTarget = { x: 0, y: 0 };
 
     const build = () => {
       const r = panel.getBoundingClientRect();
-      const mr = mark.getBoundingClientRect();
+      const mr = markEl.getBoundingClientRect();
       w = Math.max(1, r.width);
       h = Math.max(1, r.height);
       markY = mr.top - r.top + mr.height / 2;
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
       canvas.width = Math.round(w * dpr);
       canvas.height = Math.round(h * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
       const fontFamily = fontRef.current ? getComputedStyle(fontRef.current).fontFamily : "sans-serif";
-      dots = sampleMark(w, h, w / 2, markY, Math.min(mr.height * 0.82, 230), fontFamily);
-      if (motion.matches) dots.forEach((d) => ((d.x = d.homeX), (d.y = d.homeY)));
+      mark = sampleMark(w, h, w / 2, markY, Math.min(mr.height * 0.82, 230), fontFamily);
+
+      // Room around the mark for it to turn, widen in perspective and push dots aside.
+      const mx = mark.halfW * 0.14 + mark.depth + PUSH + 24;
+      const my = mark.halfH * 0.5 + mark.depth + PUSH + 24;
+      region.x = Math.max(0, Math.floor(w / 2 - mark.halfW - mx));
+      region.y = Math.max(0, Math.floor(markY - mark.halfH - my));
+      region.w = Math.max(1, Math.min(w, Math.ceil(w / 2 + mark.halfW + mx)) - region.x);
+      region.h = Math.max(1, Math.min(h, Math.ceil(markY + mark.halfH + my)) - region.y);
+      region.pw = Math.max(1, Math.round(region.w * dpr));
+      region.ph = Math.max(1, Math.round(region.h * dpr));
+      layer.width = region.pw;
+      layer.height = region.ph;
+      image = lctx.createImageData(region.pw, region.ph);
+      pixels = new Uint32Array(image.data.buffer);
+      lit = new Uint8Array(region.pw * region.ph);
 
       const count = Math.round(Math.max(24, Math.min(72, (w * h) / 28000)));
       dust = Array.from({ length: count }, () => {
@@ -165,30 +294,14 @@ export function FreeCourse() {
     };
 
     const step = (t: number) => {
-      tilt.x += (tiltTarget.x - tilt.x) * 0.035;
-      tilt.y += (tiltTarget.y - tilt.y) * 0.035;
-
-      for (const d of dots) {
-        // Slow, per-dot wobble plus parallax towards the pointer (deeper dots move more).
-        const m = d.depth * d.scale;
-        const wx = (2.2 * Math.cos(0.00028 * t + d.phase) + 1.8 * Math.sin(0.00017 * t + 0.017 * d.homeY + 1.4 * d.phase)) * m;
-        const wy = (1.9 * Math.sin(0.00031 * t + d.phase) + 1.6 * Math.cos(0.00015 * t + 0.013 * d.homeX + 1.1 * d.phase)) * m;
-        let tx = d.homeX + 10 * tilt.x * m + wx;
-        let ty = d.homeY + 6 * tilt.y * m + wy;
-        if (pointer.active) {
-          const dx = tx - pointer.x;
-          const dy = ty - pointer.y;
-          const dist = Math.hypot(dx, dy) || 1;
-          if (dist < 120) {
-            const k = 1 - dist / 120;
-            const push = k * k * (3 - 2 * k) * 9 * (0.8 + 0.35 * d.depth);
-            tx += (dx / dist) * push;
-            ty += (dy / dist) * push;
-          }
-        }
-        d.x += (tx - d.x) * 0.12;
-        d.y += (ty - d.y) * 0.12;
-      }
+      // A slow idle sway keeps the depth visible when nobody is pointing at it.
+      const swayX = pointer.active ? 0 : 0.35 * Math.sin(0.00035 * t);
+      const swayY = pointer.active ? 0 : 0.3 * Math.cos(0.00027 * t);
+      tilt.x += (tiltTarget.x + swayX - tilt.x) * 0.05;
+      tilt.y += (tiltTarget.y + swayY - tilt.y) * 0.05;
+      eased.x += (pointer.x - eased.x) * 0.18;
+      eased.y += (pointer.y - eased.y) * 0.18;
+      eased.strength += ((pointer.active ? 1 : 0) - eased.strength) * 0.08;
 
       for (const s of dust) {
         let tx = s.originX + tilt.x * s.size * 1.2 + Math.cos(0.00035 * t + s.phase) * s.drift;
@@ -208,6 +321,76 @@ export function FreeCourse() {
       }
     };
 
+    /** Projects every dot of the 3D mark and rasterises it into the layer buffer. */
+    const renderMark = (t: number) => {
+      if (!image) return;
+      pixels.fill(0);
+      lit.fill(0);
+
+      const intro = introStart < 0 ? 0 : Math.min(1, (t - introStart) / INTRO_MS);
+      const scatter = motion.matches ? 0 : (1 - intro) ** 3;
+      // Face the pointer: pointer right → turn right, pointer up → tilt up.
+      const ay = -tilt.x * TILT_Y;
+      const ax = tilt.y * TILT_X;
+      const cosY = Math.cos(ay);
+      const sinY = Math.sin(ay);
+      const cosX = Math.cos(ax);
+      const sinX = Math.sin(ax);
+      const cx = w / 2;
+      const pushOn = eased.strength > 0.01;
+      const pushR2 = PUSH_RADIUS * PUSH_RADIUS;
+      const size = Math.max(1, Math.round(mark.step * DOT * dpr));
+      const pw = region.pw;
+      const ph = region.ph;
+      const { x: X, y: Y, z: Z, r: R, g: G, b: B, lum: L, jx: JX, jy: JY } = mark;
+
+      for (let i = 0; i < mark.count; i++) {
+        const x = X[i] + JX[i] * scatter;
+        const y = Y[i] + JY[i] * scatter;
+        const z = Z[i];
+        const x1 = x * cosY + z * sinY;
+        const z1 = -x * sinY + z * cosY;
+        const y1 = y * cosX - z1 * sinX;
+        const z2 = y * sinX + z1 * cosX;
+        const f = PERSPECTIVE / (PERSPECTIVE + z2);
+        let sx = cx + x1 * f;
+        let sy = markY + y1 * f;
+
+        if (pushOn) {
+          const dx = sx - eased.x;
+          const dy = sy - eased.y;
+          const d2 = dx * dx + dy * dy;
+          if (d2 < pushR2) {
+            const d = Math.sqrt(d2) || 1;
+            const k = 1 - d / PUSH_RADIUS;
+            const p = (k * k * (3 - 2 * k) * PUSH * eased.strength) / d;
+            sx += dx * p;
+            sy += dy * p;
+          }
+        }
+
+        const px = Math.round((sx - region.x) * dpr);
+        const py = Math.round((sy - region.y) * dpr);
+        if (px < 0 || py < 0 || px + size > pw || py + size > ph) continue;
+
+        // Slow horizontal scanlines shimmer across the dot grid.
+        const shine = 0.86 + 0.14 * Math.sin(0.0022 * t - 0.045 * Y[i] + 0.01 * X[i]);
+        const lum = L[i] * shine;
+        const color =
+          (0xff000000 | (((B[i] * shine) & 0xff) << 16) | (((G[i] * shine) & 0xff) << 8) | ((R[i] * shine) & 0xff)) >>> 0;
+        for (let oy = 0; oy < size; oy++) {
+          let idx = (py + oy) * pw + px;
+          for (let ox = 0; ox < size; ox++, idx++) {
+            if (lum > lit[idx]) {
+              lit[idx] = lum;
+              pixels[idx] = color;
+            }
+          }
+        }
+      }
+      lctx.putImageData(image, 0, 0);
+    };
+
     const draw = (t: number) => {
       ctx.clearRect(0, 0, w, h);
 
@@ -216,19 +399,14 @@ export function FreeCourse() {
         ctx.fillRect(s.x - s.size / 2, s.y - s.size / 2, s.size * 1.4, Math.max(1, s.size * 0.75));
       }
 
-      ctx.save();
-      ctx.globalCompositeOperation = "lighter";
-      dots.forEach((d, i) => {
-        const a = d.alpha * (0.95 + 0.04 * Math.sin(0.00042 * t + d.phase + 0.018 * i));
-        ctx.fillStyle = `rgba(${d.rgb}, ${a})`;
-        ctx.fillRect(d.x - d.size / 2, d.y - d.size / 2, d.size * 1.02, d.size * 0.98);
-      });
-      ctx.restore();
+      renderMark(t);
+      ctx.drawImage(layer, region.x, region.y, region.w, region.h);
 
-      plane.style.transform = `translate3d(${10 * tilt.x}px, ${8 * tilt.y}px, 0)`;
+      plane.style.transform = `translate3d(${6 * tilt.x}px, ${4 * tilt.y}px, 0)`;
     };
 
     const loop = (t: number) => {
+      if (introStart < 0) introStart = t;
       step(t);
       draw(t);
       raf = requestAnimationFrame(loop);
@@ -252,9 +430,13 @@ export function FreeCourse() {
       const r = panel.getBoundingClientRect();
       pointer.x = e.clientX - r.left;
       pointer.y = e.clientY - r.top;
+      if (!pointer.active) {
+        eased.x = pointer.x;
+        eased.y = pointer.y;
+      }
       pointer.active = true;
-      tiltTarget.x = (pointer.x / r.width - 0.5) * 2;
-      tiltTarget.y = (pointer.y / r.height - 0.5) * 2;
+      tiltTarget.x = Math.max(-1, Math.min(1, (pointer.x - w / 2) / (w / 2)));
+      tiltTarget.y = Math.max(-1, Math.min(1, (pointer.y - markY) / (h / 2)));
     };
     const onLeave = () => {
       pointer.active = false;
