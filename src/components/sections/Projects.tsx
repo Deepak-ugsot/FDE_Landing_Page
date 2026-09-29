@@ -174,41 +174,28 @@ export function Projects() {
                     className="absolute top-[48%] left-1/2 will-change-transform [--reel-w:86vw] sm:[--reel-w:72vw]"
                     style={{ width: cardWidth, ...place(i, 1000, 562) }}
                   >
-                    <a
-                      href={p.href}
-                      tabIndex={isCurrent ? 0 : -1}
-                      className={`group block ${isCurrent ? "" : "pointer-events-none"}`}
+                    <div className="relative aspect-video overflow-hidden rounded-2xl bg-ink-deep">
+                      <Image
+                        src={p.image}
+                        alt={p.imageAlt}
+                        fill
+                        sizes="(min-width: 1445px) 1040px, (min-width: 640px) 72vw, 86vw"
+                        placeholder="blur"
+                        className="object-cover"
+                      />
+                    </div>
+                    <div
+                      ref={(el) => {
+                        captionsRef.current[i] = el;
+                      }}
+                      className="mt-4 min-w-0"
+                      style={{ opacity: i === 0 ? 1 : 0 }}
                     >
-                      <div className="relative aspect-video overflow-hidden rounded-2xl bg-ink-deep">
-                        <Image
-                          src={p.image}
-                          alt={p.imageAlt}
-                          fill
-                          sizes="(min-width: 1440px) 1040px, 86vw"
-                          className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-                        />
-                      </div>
-                      <div
-                        ref={(el) => {
-                          captionsRef.current[i] = el;
-                        }}
-                        className="mt-4 flex items-start justify-between gap-6"
-                        style={{ opacity: i === 0 ? 1 : 0 }}
-                      >
-                        <div className="min-w-0">
-                          <h3 className="line-clamp-2 font-display text-xl font-medium sm:text-[28px] sm:leading-tight">
-                            {p.title}
-                          </h3>
-                          <Meta category={p.category} client={p.client} />
-                        </div>
-                        <span
-                          aria-hidden="true"
-                          className="text-2xl leading-none transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1 group-hover:text-accent sm:text-3xl"
-                        >
-                          ↗
-                        </span>
-                      </div>
-                    </a>
+                      <h3 className="line-clamp-2 font-display text-xl font-medium sm:text-[28px] sm:leading-tight">
+                        {p.title}
+                      </h3>
+                      <Meta category={p.category} client={p.client} />
+                    </div>
                     <Scribble path={scribbles[i % scribbles.length]} id={`project-marker-${i}`} />
                   </article>
                 );
@@ -237,13 +224,11 @@ export function Projects() {
         <ul className="mt-10 grid gap-10 md:grid-cols-2">
           {projects.map((p) => (
             <li key={p.title}>
-              <a href={p.href} className="block">
-                <div className="relative aspect-video overflow-hidden rounded-2xl bg-ink-deep">
-                  <Image src={p.image} alt={p.imageAlt} fill sizes="(min-width: 768px) 50vw, 90vw" className="object-cover" />
-                </div>
-                <h3 className="mt-4 font-display text-xl font-medium">{p.title}</h3>
-                <Meta category={p.category} client={p.client} />
-              </a>
+              <div className="relative aspect-video overflow-hidden rounded-2xl bg-ink-deep">
+                <Image src={p.image} alt={p.imageAlt} fill sizes="(min-width: 768px) 50vw, 90vw" placeholder="blur" className="object-cover" />
+              </div>
+              <h3 className="mt-4 font-display text-xl font-medium">{p.title}</h3>
+              <Meta category={p.category} client={p.client} />
             </li>
           ))}
         </ul>

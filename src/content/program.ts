@@ -21,7 +21,7 @@ export const program = {
 // Official channels shown in the footer.
 export const socials = [
   { label: "YouTube", href: "https://www.youtube.com/@upGrad_edu", tone: "flame" },
-  { label: "LinkedIn", href: "https://www.linkedin.com/in/vishwa-mohan/", tone: "accent" },
+  { label: "LinkedIn", href: "https://www.linkedin.com/company/upgrad-school-of-technology/posts/", tone: "accent" },
 ] as const;
 
 export const navLinks = [

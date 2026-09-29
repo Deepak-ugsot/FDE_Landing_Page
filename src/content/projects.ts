@@ -1,64 +1,64 @@
+import type { StaticImageData } from "next/image";
+// Static imports: Next reads each image's size and generates a blur placeholder at build time.
+// Sources are 1600×900 WebP (16:9); the PNGs beside them are the uncompressed originals.
+import attendance from "../../public/assets/projects/EmployeeAttendance.webp";
+import healthcare from "../../public/assets/projects/Healthcare.webp";
+import mindMap from "../../public/assets/projects/MindMapAI.webp";
+import auditor from "../../public/assets/projects/ai_Auditor.webp";
+import pickFlick from "../../public/assets/projects/pickflick.webp";
+import resume from "../../public/assets/projects/resume.webp";
+
 // Featured projects for the Projects reel.
-// TODO: category/domain tags are drawn from each project's name, and links are placeholders — confirm with the program team.
+// TODO: category/domain tags are drawn from each project's name — confirm with the program team.
 export type Project = {
   title: string;
   category: string;
   client: string;
-  image: string;
+  image: StaticImageData;
   imageAlt: string;
-  href: string;
 };
-
-// Stand-in photos from Unsplash (free licence), cropped to 16:9.
-const unsplash = (id: string) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=1600&h=900&q=80`;
 
 export const projects: Project[] = [
   {
     title: "AI Resume/Job-Description Matcher (ATS Scorer)",
     category: "AI Application",
     client: "Recruiting",
-    image: unsplash("photo-1698047681432-006d2449c631"),
-    imageAlt: "A woman reading a resume at a table",
-    href: "#",
+    image: resume,
+    imageAlt: "A developer at a laptop beside a resume, a job description and an ATS score of 92 out of 100",
   },
   {
     title: "PickFlick — Group Movie Night Decision Solver",
     category: "Decision Solver",
     client: "Entertainment",
-    image: unsplash("photo-1758525862263-af89b090fb56"),
-    imageAlt: "Two friends watching television with a bowl of popcorn",
-    href: "#",
+    image: pickFlick,
+    imageAlt: "Friends on a sofa choosing a film on a laptop, with genre preferences and a 95% group match",
   },
   {
     title: "AI Accessibility Auditor",
     category: "AI Application",
     client: "Web Accessibility",
-    image: unsplash("photo-1574887427561-d3d5d58c9273"),
-    imageAlt: "A person typing on a braille writer",
-    href: "#",
+    image: auditor,
+    imageAlt: "Accessibility audit dashboards showing an accessibility score of 87 and issues by category",
   },
   {
     title: "MindMapAI — AI Idea-to-Structure Visual Thinking Tool",
     category: "AI Application",
     client: "Productivity",
-    image: unsplash("photo-1745847768382-816bfc32e1bb"),
-    imageAlt: "People looking at a mind map on a laptop screen",
-    href: "#",
+    image: mindMap,
+    imageAlt: "An idea typed in, processed by AI and turned into a structured mind map",
   },
   {
     title: "Employee Attendance & Payroll Processing Engine",
     category: "Processing Engine",
     client: "HR & Payroll",
-    image: unsplash("photo-1753955900478-323e4da1eff7"),
-    imageAlt: "Someone working through figures with a calculator and a laptop",
-    href: "#",
+    image: attendance,
+    imageAlt: "A person on a laptop surrounded by attendance, payroll and salary breakdown panels",
   },
   {
     title: "Healthcare Appointment & Patient Queue Management System",
     category: "Management System",
     client: "Healthcare",
-    image: unsplash("photo-1519494026892-80bbd2d6fd0d"),
-    imageAlt: "A hospital lobby with a reception desk",
-    href: "#",
+    image: healthcare,
+    imageAlt: "A smiling man at a laptop with appointment, patient queue and satisfaction dashboards",
   },
 ];
