@@ -9,7 +9,6 @@ const points = [
   {
     title: "AI adoption is accelerating",
     body: "Businesses are moving beyond experimentation and looking for people who can turn AI capabilities into working systems.",
-    accent: true,
   },
   {
     title: "The deployment gap is growing",
@@ -133,7 +132,7 @@ export function MarketSignal({ applyHref }: { applyHref: string }) {
 
   const pointContent = (point: (typeof points)[number]) => (
     <>
-      <span className={`block font-display text-lg leading-tight font-medium ${point.accent ? "text-accent" : "text-paper"}`}>
+      <span className="block font-display text-lg leading-tight font-medium text-accent">
         {point.title}
       </span>
       <span className="mt-1.5 block text-[13px] leading-snug text-muted/80">{point.body}</span>

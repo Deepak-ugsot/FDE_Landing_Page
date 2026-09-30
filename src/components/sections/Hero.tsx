@@ -26,7 +26,7 @@ export function Hero() {
           <span className="mt-5 block text-[clamp(1.35rem,2.6vw,2rem)] leading-snug tracking-normal text-mist">
             AI that moves from demo to deployment.
           </span>
-          <span className="mt-6 flex items-start gap-4 text-[clamp(1.5rem,3vw,2.25rem)] leading-tight tracking-normal">
+          <span className="mt-6 flex items-start gap-4 text-[clamp(1.25rem,2.5vw,1.875rem)] leading-tight tracking-normal">
             <span className="mt-[0.625em] h-px w-12 shrink-0 bg-accent" aria-hidden="true" />
             <span>
               <span className="text-dim">by</span> {program.institution} <span className="text-dim">with</span>{" "}
@@ -35,7 +35,7 @@ export function Hero() {
           </span>
         </h1>
 
-        <div className="mt-8 max-w-xl space-y-4 text-base leading-relaxed text-mist sm:text-lg">
+        <div className="mt-8 max-w-xl space-y-4 text-sm leading-relaxed text-mist sm:text-base">
           <p>Learn how to take AI from an interesting prototype to a system that works inside a real business.</p>
           <p>
             Learn to identify the right problem, work with stakeholders, design the solution, build across the stack,
