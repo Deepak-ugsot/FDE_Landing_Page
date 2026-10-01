@@ -42,19 +42,24 @@ export function FeatureSections({
           {description && <p className="max-w-md text-base leading-relaxed text-mist">{description}</p>}
         </div>
 
-        <ul className="grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+        {/* Phones: a swipeable row with the next card peeking in. From sm: a 2- then 3-column grid. */}
+        <ul className="-mx-5 flex snap-x snap-mandatory scroll-px-5 gap-4 overflow-x-auto px-5 pb-2 [scrollbar-width:none] sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-x-8 sm:gap-y-12 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-3 [&::-webkit-scrollbar]:hidden">
           {features.map((f) => (
-            <li key={f.title} className="group transition duration-300 hover:-translate-y-1">
+            <li
+              key={f.title}
+              className="group w-[78vw] max-w-[20rem] shrink-0 snap-start transition duration-300 hover:-translate-y-1 sm:w-auto sm:max-w-none"
+            >
               <div
                 aria-hidden="true"
-                className="relative aspect-[16/10] overflow-hidden sm:aspect-[10/7] rounded-3xl bg-[radial-gradient(120%_90%_at_20%_0%,var(--color-accent-light),var(--color-accent)_45%,var(--color-accent-deep))]"
+                className="@container relative aspect-[10/7] overflow-hidden rounded-2xl sm:rounded-3xl bg-[radial-gradient(120%_90%_at_20%_0%,var(--color-accent-light),var(--color-accent)_45%,var(--color-accent-deep))]"
               >
                 <div className="absolute inset-0 origin-bottom-right transition duration-500 group-hover:scale-[1.03]">
-                  {f.visual}
+                  {/* Visuals are drawn on a fixed 352×246 canvas, scaled to the card's width. */}
+                  <div className="feature-canvas absolute top-0 left-0 h-[246.4px] w-[352px] origin-top-left">{f.visual}</div>
                 </div>
               </div>
-              <h3 className="mt-5 font-display text-2xl leading-tight font-normal">{f.title}</h3>
-              <p className="mt-2 text-base leading-relaxed text-paper/60">{f.body}</p>
+              <h3 className="mt-4 font-display text-xl leading-tight font-normal sm:mt-5 sm:text-2xl">{f.title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-paper/60 sm:text-base">{f.body}</p>
             </li>
           ))}
         </ul>
