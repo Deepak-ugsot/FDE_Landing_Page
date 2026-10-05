@@ -62,7 +62,7 @@ export function WhyPaid() {
       description={`The lessons stay free on YouTube. ${program.platformPrice} adds everything that turns watching into doing.`}
       features={perks}
     >
-      <CtaButton href={program.platformHref}>Unlock it for {program.platformPrice}</CtaButton>
+      <CtaButton href={program.platformHref} data-offer-popup>Unlock it for {program.platformPrice}</CtaButton>
     </FeatureSections>
   );
 }

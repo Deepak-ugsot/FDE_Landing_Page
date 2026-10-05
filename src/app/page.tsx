@@ -1,3 +1,4 @@
+import { OfferPopup } from "@/components/OfferPopup";
 import { CourseIntro } from "@/components/sections/CourseIntro";
 import { Curriculum } from "@/components/sections/Curriculum";
 import { Faq } from "@/components/sections/Faq";
@@ -28,6 +29,7 @@ export default function Home() {
         <Faq />
       </main>
       <Footer />
+      <OfferPopup />
     </>
   );
 }

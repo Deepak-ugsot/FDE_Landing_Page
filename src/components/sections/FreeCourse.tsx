@@ -528,7 +528,7 @@ export function FreeCourse() {
               </svg>
               Watch free on YouTube
             </a>
-            <CtaButton href={program.platformHref}>Unlock practice · {program.platformPrice}</CtaButton>
+            <CtaButton href={program.platformHref} data-offer-popup>Unlock practice · {program.platformPrice}</CtaButton>
           </div>
         </div>
       </div>

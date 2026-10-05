@@ -17,7 +17,8 @@ export function CtaButton({
   children,
   variant = "accent",
   external = false,
-}: {
+  ...rest
+}: Omit<React.ComponentProps<"a">, "href" | "children"> & {
   href: string;
   children: React.ReactNode;
   variant?: Variant;
@@ -29,7 +30,8 @@ export function CtaButton({
   return (
     <a
       href={href}
-      className="group inline-flex items-center text-base font-medium"
+      className="group inline-flex items-center rounded-2xl text-base font-medium outline-offset-4 focus-visible:outline-2 focus-visible:outline-accent-light"
+      {...rest}
       {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
     >
       <span className={`${block} mr-0.5 w-12 overflow-hidden group-hover:mr-0 group-hover:w-0`}>
