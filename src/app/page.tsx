@@ -1,3 +1,4 @@
+import { BrochurePopup } from "@/components/BrochurePopup";
 import { OfferPopup } from "@/components/OfferPopup";
 import { Certificate } from "@/components/sections/Certificate";
 import { CourseIntro } from "@/components/sections/CourseIntro";
@@ -32,6 +33,7 @@ export default function Home() {
       </main>
       <Footer />
       <OfferPopup />
+      <BrochurePopup />
     </>
   );
 }

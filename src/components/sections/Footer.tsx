@@ -73,8 +73,8 @@ export function Footer() {
         </div>
 
         <div className="grid gap-14 px-6 pt-14 pb-10 sm:px-10 lg:grid-cols-[38%_1fr] lg:gap-0 lg:px-16 lg:pt-16">
-          {/* Newsletter */}
-          <div className="lg:pr-16">
+          {/* Newsletter — #updates is the target of the brochure popup's "Notify me" */}
+          <div id="updates" className="scroll-mt-24 lg:pr-16">
             <Logo className="h-14 w-auto" />
             <h2 className="mt-10 flex gap-3 font-display text-2xl leading-snug font-normal">
               <span className="mt-3 size-2.5 shrink-0 rounded-full bg-flame" aria-hidden="true" />
