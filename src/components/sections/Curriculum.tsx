@@ -31,9 +31,10 @@ function Arrow({ back = false }: { back?: boolean }) {
 /** One phase's modules and topics, in teaching order (shared by the desktop panel and the phone accordion). */
 function PhaseBody({ index }: { index: number }) {
   return (
-    <ol className="grid items-start gap-3 xl:grid-cols-2">
+    // Cards stretch to their row's height, so a short module doesn't leave a ragged gap above the next row.
+    <ol className="grid gap-3 xl:grid-cols-2">
       {modulesOf(curriculum[index]).map((mod, i) => (
-        <li key={mod.title} className="rounded-2xl border border-ink-line/70 bg-ink-raised/30 p-5">
+        <li key={mod.title} className="flex flex-col rounded-2xl border border-ink-line/70 bg-ink-raised/30 p-5">
           <h4 className="flex items-baseline gap-3 font-display text-lg leading-snug">
             <span className="font-mono text-xs font-bold text-accent">
               {index + 1}.{i + 1}
