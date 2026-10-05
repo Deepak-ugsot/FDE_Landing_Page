@@ -2,11 +2,26 @@
 
 import { useEffect, useRef, useState } from "react";
 
-// 568×320, ~1 MB. The clip is blurred, greyscaled and faded to 30–40% opacity, so a low-bitrate
-// export is indistinguishable from the 1080p master while costing a fraction of the page weight.
-// The master lives in git history (removed in the asset cleanup); re-export it with:
-//   avconvert -s background_video.mp4 -p PresetMediumQuality -o background_video_320p.mp4 --multiPass
-const VIDEO_SRC = "/assets/background_video_320p.mp4";
+// Two encodes of the same 11.8s clip, both H.264 and both with the audio track stripped — the
+// element is muted, so an AAC track is weight nobody ever hears (the old 320p file carried one).
+//
+// Phones get the 640x360 cut: the hero box is the full viewport width there, so ~390px of CSS
+// width, and 640 still lands slightly oversampled. Everything from `sm:` up gets 960x540, which
+// roughly matches the 56% column the video occupies on desktop once `scale-125` is applied.
+//
+// Earlier this was a single 568x320 @715kbps file. That measured 33.8dB luma PSNR against the
+// master and the artifacts survived the 3px blur — chalk lettering in the background smeared and
+// hair detail went blotchy. 960x540 @1100kbps measures 42.0dB and reads clean at the same blur.
+//
+// The 1920x1080 master is in git history (deleted in 46bf4a2, so `git show 46bf4a2^:public/assets/
+// background_video.mp4 > master.mp4` brings it back). Re-encode with AVAssetWriter at
+// AVVideoAverageBitRateKey 1_100_000 / 650_000 and no audio input; `avconvert` can't hit these
+// bitrates or drop the audio track, so the comment that used to live here was wrong.
+//
+// NOTE: /assets/* is served `immutable` for a year (see next.config.ts), so any re-encode has to
+// land under a NEW filename or browsers will keep the old bytes.
+const VIDEO_WIDE = "/assets/background_video_960x540.mp4";
+const VIDEO_NARROW = "/assets/background_video_640x360.mp4";
 
 /**
  * Decorative, blurred background video on the right side of the hero, looping
@@ -27,7 +42,11 @@ export function HeroVideo() {
     // Reduced-motion users never see it, so don't spend their bandwidth on it either.
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    const start = () => setSrc(VIDEO_SRC);
+    // Resolved once, on idle. A later resize doesn't re-pick: swapping the src mid-visit would
+    // re-download the whole clip to show the same frames at a resolution nobody asked for.
+    const start = () =>
+      setSrc(window.matchMedia("(min-width: 640px)").matches ? VIDEO_WIDE : VIDEO_NARROW);
+
     if (typeof window.requestIdleCallback === "function") {
       const id = window.requestIdleCallback(start, { timeout: 2000 });
       return () => window.cancelIdleCallback(id);
