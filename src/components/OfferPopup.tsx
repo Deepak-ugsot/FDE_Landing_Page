@@ -78,7 +78,8 @@ export function OfferPopup() {
         backdrop:bg-black/0 backdrop:transition-[background-color,backdrop-filter,display,overlay] backdrop:transition-discrete backdrop:duration-400 open:backdrop:bg-black/75 open:backdrop:backdrop-blur-sm starting:open:backdrop:bg-black/0 starting:open:backdrop:backdrop-blur-none
         motion-reduce:transition-none motion-reduce:backdrop:transition-none"
     >
-      <div className="relative rounded-3xl rounded-tl-none bg-ink-deep sm:rounded-[32px] shadow-[0_40px_120px_-24px_rgba(0,0,0,0.9)]">
+      {/* sm:rounded-[32px] would re-round all four corners, so the tl-none has to be repeated at sm. */}
+      <div className="relative rounded-3xl rounded-tl-none bg-ink-deep sm:rounded-[32px] sm:rounded-tl-none shadow-[0_40px_120px_-24px_rgba(0,0,0,0.9)]">
         <CardTab compact>Forward Deployed Engineer</CardTab>
 
         {/* Sits at the tab's height, on the other side of the card's top edge */}
