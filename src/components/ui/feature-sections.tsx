@@ -1,14 +1,15 @@
 export type Feature = {
   title: string;
   body: string;
-  /** Decorative illustration drawn inside the card's accent panel (absolutely positioned). */
+  /** Decorative illustration drawn inside the card's panel (absolutely positioned). */
   visual: React.ReactNode;
 };
 
 /**
  * Centered heading over a full-width grid of illustrated cards (1, 2 then 3 columns), spanning
- * the same container as the other sections. Each card's visual sits on an accent-gradient
- * panel; on hover the card lifts and the visual nudges forward.
+ * the same container as the other sections. Each card's visual sits on a dark-gray gradient
+ * panel with a soft accent border; on hover the card lifts, the border lights up and the
+ * visual nudges forward.
  */
 export function FeatureSections({
   id,
@@ -51,7 +52,7 @@ export function FeatureSections({
             >
               <div
                 aria-hidden="true"
-                className="@container relative aspect-[10/7] overflow-hidden rounded-2xl sm:rounded-3xl bg-[radial-gradient(120%_90%_at_20%_0%,var(--color-accent-light),var(--color-accent)_45%,var(--color-accent-deep))]"
+                className="@container relative aspect-[10/7] overflow-hidden rounded-2xl border border-accent/45 bg-[radial-gradient(120%_90%_at_20%_0%,#363636,var(--color-ink-raised)_40%,var(--color-ink-deep))] transition-colors duration-300 group-hover:border-accent sm:rounded-3xl"
               >
                 <div className="absolute inset-0 origin-bottom-right transition duration-500 group-hover:scale-[1.03]">
                   {/* Visuals are drawn on a fixed 352×246 canvas, scaled to the card's width. */}

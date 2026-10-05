@@ -7,7 +7,7 @@ import a4 from "../../../public/assets/why-paid/avatars/4.webp";
 import a5 from "../../../public/assets/why-paid/avatars/5.webp";
 
 // Illustrations for the WhyPaid cards: small product mockups drawn in code, so they stay
-// crisp and on-brand. Each fills a FeatureSections frame (accent panel, ~352×246) and its
+// crisp and on-brand. Each fills a FeatureSections frame (dark panel, ~352×246) and its
 // white cards run off the right/bottom edge on purpose. All decorative.
 
 const sheet = "absolute bg-white text-ink-deep shadow-[0_12px_40px_rgba(0,0,0,0.25)]";
@@ -35,7 +35,7 @@ export function ProjectsVisual() {
   const f = "text-[#f6c177]";
   return (
     <>
-      <div className="absolute top-[12%] right-0 bottom-0 left-[9%] overflow-hidden rounded-tl-2xl bg-[#161616] shadow-[0_12px_40px_rgba(0,0,0,0.35)]">
+      <div className="absolute top-[12%] right-0 bottom-0 left-[9%] overflow-hidden rounded-tl-2xl border-t border-l border-white/10 bg-[#161616] shadow-[0_12px_40px_rgba(0,0,0,0.35)]">
         <div className="flex items-center gap-1.5 border-b border-white/8 px-4 py-2.5">
           <span className="size-2 rounded-full bg-white/20" />
           <span className="size-2 rounded-full bg-white/20" />
