@@ -144,7 +144,7 @@ function ResultPill({ lit }: { lit: boolean }) {
         className="flex size-7 items-center justify-center rounded-full bg-accent text-on-accent"
         aria-hidden="true"
       >
-        <svg viewBox="0 0 24 24" className="size-4">
+        <svg viewBox="0 0 24 24" className="size-4" aria-hidden="true">
           <path
             d="M12 5v14M5 12h14"
             stroke="currentColor"

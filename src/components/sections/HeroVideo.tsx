@@ -2,9 +2,11 @@
 
 import { useEffect, useRef, useState } from "react";
 
-// 960×540 export of public/assets/background_video.mp4 (1080p, 40 MB): it's blurred and faded, so the
-// smaller file (~7 MB) looks the same and starts much sooner. Re-export it if the source video changes.
-const VIDEO_SRC = "/assets/background_video_540p.mp4";
+// 568×320, ~1 MB. The clip is blurred, greyscaled and faded to 30–40% opacity, so a low-bitrate
+// export is indistinguishable from the 1080p master while costing a fraction of the page weight.
+// The master lives in git history (removed in the asset cleanup); re-export it with:
+//   avconvert -s background_video.mp4 -p PresetMediumQuality -o background_video_320p.mp4 --multiPass
+const VIDEO_SRC = "/assets/background_video_320p.mp4";
 
 /**
  * Decorative, blurred background video on the right side of the hero, looping
@@ -12,15 +14,26 @@ const VIDEO_SRC = "/assets/background_video_540p.mp4";
  * see a blank frame — and nothing at all if autoplay is blocked. On phones it
  * sits behind the heading, full width and a little dimmer. Skipped for
  * reduced-motion users.
+ *
+ * The src is attached only once the browser goes idle, so this decoration never
+ * competes with the hero's text and images for bandwidth on first load.
  */
 export function HeroVideo() {
+  const [src, setSrc] = useState<string>();
   const [visible, setVisible] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  // Autoplay can start before React hydrates, so the onPlaying event may already have fired.
   useEffect(() => {
-    const v = videoRef.current;
-    if (v && !v.paused && v.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA) setVisible(true);
+    // Reduced-motion users never see it, so don't spend their bandwidth on it either.
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const start = () => setSrc(VIDEO_SRC);
+    if (typeof window.requestIdleCallback === "function") {
+      const id = window.requestIdleCallback(start, { timeout: 2000 });
+      return () => window.cancelIdleCallback(id);
+    }
+    const timer = window.setTimeout(start, 1000); // Safari < 16.4
+    return () => window.clearTimeout(timer);
   }, []);
 
   return (
@@ -31,12 +44,12 @@ export function HeroVideo() {
     >
       <video
         ref={videoRef}
-        src={VIDEO_SRC}
+        src={src}
         autoPlay
         muted
         loop
         playsInline
-        preload="auto"
+        preload="metadata"
         tabIndex={-1}
         onPlaying={() => setVisible(true)}
         // Overscaled so the -6° tilt never shows the box's corners.

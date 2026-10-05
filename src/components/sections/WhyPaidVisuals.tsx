@@ -91,7 +91,12 @@ const people = [
 export function CommunityVisual() {
   return (
     <>
-      <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 size-full">
+      <svg
+        viewBox="0 0 100 100"
+        preserveAspectRatio="none"
+        className="absolute inset-0 size-full"
+        aria-hidden="true"
+      >
         <polygon
           points={people.map((p) => `${p.x},${p.y}`).join(" ")}
           fill="none"
