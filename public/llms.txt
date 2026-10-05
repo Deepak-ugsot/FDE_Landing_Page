@@ -1,0 +1,41 @@
+# AI Forward Deployed Engineer Program
+
+> A live, mentor-led program by upGrad School of Technology that trains engineers
+> to take AI from demo to production inside real businesses — discovery, build,
+> deployment and ownership. Taught by Vishwa Mohan (Founder & CEO, upGrad School
+> of Technology; ex-Oracle, Walmart, PayPal, LinkedIn).
+
+This is a single-page site. Every link below is a section anchor on the home page.
+
+## Start here
+
+- [Home](/): program overview, who it is for, and the companies building FDE teams today.
+- [Why FDE](/#why-fde): what a Forward Deployed Engineer is, why the role exists, and the deployment gap it closes.
+- [Course intro](/#course-intro): the program's premise and what "industry-ready FDE" means in practice.
+- [FAQ](/#faq): who the program is for, prerequisites, duration, cost, and who teaches it.
+
+## Program
+
+- [Curriculum](/#curriculum): nine phases — Production Software & Data Engineering; Applied AI I (LLM + RAG); Applied AI II (Agents & MCP); Backend & Enterprise Integration; Frontend & Operational Applications; Cloud, DevOps & LLMOps; System Design at Scale; Security, Reliability & Governance; The FDE Craft.
+- [Projects](/#projects): the portfolio built during the program, including an ATS resume/JD matcher, an AI accessibility auditor, MindMapAI, PickFlick, a payroll processing engine, and a healthcare patient-queue system.
+- [Certificate](/#certificate): the certificate of completion awarded at the end of the program.
+- [Mentor](/#mentor): Vishwa Mohan's background and the companies he has built teams at.
+
+## Access and pricing
+
+- [Free course](/#free-course): the course content itself is free.
+- [Why the paid platform](/#why-paid): what the ₹99 practice platform adds on top of the free course — labs, graded practice, and the hands-on environment.
+
+## Stay in touch
+
+- [Cohort updates](/#updates): newsletter form for cohort dates and program updates.
+- [YouTube — upGrad School of Technology](https://www.youtube.com/@upGradSchoolofTechnology): course videos and recordings.
+- [LinkedIn — upGrad School of Technology](https://www.linkedin.com/company/upgrad-school-of-technology/posts/): program announcements.
+- [LinkedIn — Vishwa Mohan](https://www.linkedin.com/in/vishwa-mohan/): the mentor's profile.
+
+## Notes
+
+- Next cohort dates are not yet announced; see [Cohort updates](/#updates).
+- Links are root-relative because the production domain is not yet configured in
+  this project. Once it is, prefix each path with the canonical origin and set
+  `metadataBase` in `src/app/layout.tsx` to match.

@@ -168,7 +168,7 @@ export function WhyFde() {
                 handle real users, meet business requirements, and make it reliable enough to use every day.
               </p>
             </div>
-            <p className="mt-8 flex items-center gap-3 font-display text-lg font-medium text-accent sm:text-xl">
+            <p className="mt-8 flex items-center gap-3 font-display text-lg font-medium text-accent-light sm:text-xl">
               <span className="h-px w-8 shrink-0 bg-accent" aria-hidden="true" />
               That&apos;s where the Forward Deployed Engineer comes in.
             </p>

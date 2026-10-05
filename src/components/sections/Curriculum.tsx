@@ -36,7 +36,7 @@ function PhaseBody({ index }: { index: number }) {
       {modulesOf(curriculum[index]).map((mod, i) => (
         <li key={mod.title} className="flex flex-col rounded-2xl border border-ink-line/70 bg-ink-raised/30 p-5">
           <h4 className="flex items-baseline gap-3 font-display text-lg leading-snug">
-            <span className="font-mono text-xs font-bold text-accent">
+            <span className="font-mono text-xs font-bold text-accent-light">
               {index + 1}.{i + 1}
             </span>
             {mod.title}
@@ -240,7 +240,7 @@ export function Curriculum() {
                       isActive ? "opacity-100" : "opacity-0"
                     }`}
                   />
-                  <span className={`font-mono text-sm font-bold ${isActive ? "text-accent" : "text-dim"}`}>{pad(i + 1)}</span>
+                  <span className={`font-mono text-sm font-bold ${isActive ? "text-paper" : "text-dim"}`}>{pad(i + 1)}</span>
                   <span className="min-w-0 flex-1">
                     <span className={`block font-display text-[17px] leading-snug ${isActive ? "text-paper" : "text-mist group-hover:text-paper"}`}>
                       {phase.title}
@@ -264,7 +264,7 @@ export function Curriculum() {
           >
             <div key={active} className="flex-1 animate-fade-up motion-reduce:animate-none">
               <div className="flex flex-wrap items-center gap-3">
-                <span className="font-mono text-sm font-bold tracking-[0.12em] text-accent uppercase">Phase {pad(active + 1)}</span>
+                <span className="font-mono text-sm font-bold tracking-[0.12em] text-accent-light uppercase">Phase {pad(active + 1)}</span>
                 <span className="rounded-full border border-ink-line px-3 py-1 text-xs text-mist">{phaseMeta(active)}</span>
               </div>
               <h3 className="mt-4 mb-8 font-display text-[clamp(1.75rem,3vw,2.5rem)] leading-[1.1] font-light">{p.title}</h3>

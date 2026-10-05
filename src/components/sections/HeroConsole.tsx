@@ -9,7 +9,7 @@ const stages = [
 
 const statusStyle = {
   done: "bg-sage/15 text-sage",
-  live: "bg-accent/20 text-accent",
+  live: "bg-accent/20 text-accent-light",
   next: "bg-white/5 text-dim",
 };
 
@@ -18,7 +18,7 @@ const log = [
   { mark: "✓", text: "golden-set evals passed", tone: "text-sage" },
   { mark: "✓", text: "PII guardrails enabled", tone: "text-sage" },
   { mark: "✓", text: "SSO (OIDC) connected", tone: "text-sage" },
-  { mark: "→", text: "canary: 10% of support team", tone: "text-accent" },
+  { mark: "→", text: "canary: 10% of support team", tone: "text-accent-light" },
 ];
 
 export function HeroConsole() {

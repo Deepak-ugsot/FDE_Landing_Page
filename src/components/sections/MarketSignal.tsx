@@ -132,7 +132,7 @@ export function MarketSignal({ applyHref }: { applyHref: string }) {
 
   const pointContent = (point: (typeof points)[number]) => (
     <>
-      <span className="block font-display text-lg leading-tight font-medium text-accent">
+      <span className="block font-display text-lg leading-tight font-medium text-accent-light">
         {point.title}
       </span>
       <span className="mt-1.5 block text-[13px] leading-snug text-muted/80">{point.body}</span>

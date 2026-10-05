@@ -47,21 +47,25 @@ export function Footer() {
     <footer className="rounded-t-[32px] bg-accent text-on-accent">
       {/* CTA marquee band */}
       <Marquee className="py-12 lg:py-16">
-        {[0, 1].map((k) => (
-          <span key={k} className="flex items-center">
-            <span className="px-6 font-display text-[clamp(2.25rem,4.4vw,3.5rem)] leading-none font-light whitespace-nowrap">
-              Ready to become an FDE?
+        {(clone) =>
+          [0, 1].map((k) => (
+            <span key={k} className="flex items-center">
+              <span className="px-6 font-display text-[clamp(2.25rem,4.4vw,3.5rem)] leading-none font-light whitespace-nowrap">
+                Ready to become an FDE?
+              </span>
+              <a
+                href={program.applyHref}
+                // The clone is aria-hidden decoration; keep its duplicate link out of the tab order.
+                tabIndex={clone ? -1 : undefined}
+                className="flex h-11 items-center gap-2 rounded-2xl bg-ink-deep px-4 text-sm font-medium whitespace-nowrap text-paper transition-colors hover:bg-black"
+              >
+                <Sparkle className="size-3.5 text-accent" />
+                Apply now
+              </a>
+              <Sparkle className="mx-8 size-7" />
             </span>
-            <a
-              href={program.applyHref}
-              className="flex h-11 items-center gap-2 rounded-2xl bg-ink-deep px-4 text-sm font-medium whitespace-nowrap text-paper transition-colors hover:bg-black"
-            >
-              <Sparkle className="size-3.5 text-accent" />
-              Apply now
-            </a>
-            <Sparkle className="mx-8 size-7" />
-          </span>
-        ))}
+          ))
+        }
       </Marquee>
 
       {/* Dark footer card on the accent background */}
@@ -106,7 +110,7 @@ export function Footer() {
                 <input type="checkbox" name="consent" required className="size-4 accent-accent" />
                 <span>
                   I agree with the{" "}
-                  <a href={program.privacyHref} className="text-accent underline-offset-2 hover:underline">
+                  <a href={program.privacyHref} className="text-accent-light underline-offset-2 hover:underline">
                     privacy statement
                   </a>
                 </span>

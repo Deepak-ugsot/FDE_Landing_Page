@@ -138,7 +138,7 @@ function Role({ title, meta, className }: { title: string; meta: string; classNa
           <MapPin className="size-3" />
           {meta}
         </p>
-        <span className="mt-2 inline-block rounded-full bg-accent/10 px-2 py-0.5 text-[10px] font-semibold text-accent">
+        <span className="mt-2 inline-block rounded-full bg-accent/10 px-2 py-0.5 text-[10px] font-semibold text-accent-deep">
           New role
         </span>
       </div>
@@ -162,7 +162,7 @@ export function CertificateVisual() {
         <div className="flex h-full flex-col items-center rounded-t-xl border border-b-0 border-accent/25 px-4 pt-4 text-center">
           <p className="text-[9.5px] font-semibold tracking-[0.18em] text-accent uppercase">Certificate of completion</p>
           <p className="mt-2 font-display text-[16px] leading-tight font-semibold">AI Forward Deployed Engineer</p>
-          <p className="mt-3 text-[10px] text-ink-deep/50">Awarded to</p>
+          <p className="mt-3 text-[10px] text-ink-deep/60">Awarded to</p>
           <p className="font-display text-[19px] italic">Your Name</p>
           <span className="mt-1.5 h-px w-2/5 bg-ink-deep/15" />
         </div>

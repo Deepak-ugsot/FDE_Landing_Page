@@ -291,7 +291,7 @@ export function WhoIsFde() {
         <div className="flex justify-center">
           <ResultPill lit={lit} />
         </div>
-        <p className="mt-5 font-mono text-sm font-bold tracking-[0.2em] text-accent uppercase sm:text-base">
+        <p className="mt-5 font-mono text-sm font-bold tracking-[0.2em] text-accent-light uppercase sm:text-base">
           Build <span className="text-dim">•</span> Deploy{" "}
           <span className="text-dim">•</span> Solve
         </p>
