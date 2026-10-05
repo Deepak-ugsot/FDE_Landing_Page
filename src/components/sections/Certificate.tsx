@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { program } from "@/content/program";
-import certificate from "../../../public/assets/demo_certificate_fde.png";
+import certificate from "../../../public/assets/demo_fde.png";
 
 /**
  * The certificate the paid tier ends with: a centered heading (same header block as
