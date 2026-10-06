@@ -7,7 +7,7 @@ import a4 from "../../../public/assets/why-paid/avatars/4.webp";
 import a5 from "../../../public/assets/why-paid/avatars/5.webp";
 
 // Illustrations for the WhyPaid cards: small product mockups drawn in code, so they stay
-// crisp and on-brand. Each fills a FeatureSections frame (dark panel, ~352×246) and its
+// crisp and on-brand. Each fills a perk-card frame (dark panel, ~352×246) and its
 // white cards run off the right/bottom edge on purpose. All decorative.
 
 const sheet = "absolute bg-white text-ink-deep shadow-[0_12px_40px_rgba(0,0,0,0.25)]";

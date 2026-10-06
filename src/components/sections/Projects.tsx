@@ -146,7 +146,7 @@ export function Projects() {
           What you&apos;ll <span className="text-dim">ship.</span>
         </h2>
       </div>
-      <a href="#projects-end" className="shrink-0 pb-2 font-mono text-xs text-mist transition-colors hover:text-accent">
+      <a href="#projects-end" className="shrink-0 pb-2 font-mono text-xs text-mist transition-colors hover:text-accent-light">
         Skip projects <span aria-hidden="true">↘</span>
       </a>
     </div>

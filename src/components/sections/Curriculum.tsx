@@ -277,7 +277,7 @@ export function Curriculum() {
                 type="button"
                 onClick={() => select(active - 1)}
                 disabled={active === 0}
-                className="inline-flex items-center gap-2 text-sm text-mist transition-colors hover:text-accent disabled:pointer-events-none disabled:opacity-30"
+                className="inline-flex items-center gap-2 text-sm text-mist transition-colors hover:text-accent-light disabled:pointer-events-none disabled:opacity-30"
               >
                 <Arrow back />
                 Previous
@@ -289,7 +289,7 @@ export function Curriculum() {
                 type="button"
                 onClick={() => select(active + 1)}
                 disabled={active === n - 1}
-                className="inline-flex items-center gap-2 text-sm text-mist transition-colors hover:text-accent disabled:pointer-events-none disabled:opacity-30"
+                className="inline-flex items-center gap-2 text-sm text-mist transition-colors hover:text-accent-light disabled:pointer-events-none disabled:opacity-30"
               >
                 Next phase
                 <Arrow />

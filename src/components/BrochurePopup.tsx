@@ -74,7 +74,7 @@ export function BrochurePopup() {
         </button>
 
         <div className="p-5 sm:p-8 lg:p-10">
-          <span className="inline-flex items-center gap-2 rounded-full border border-accent/45 px-3 py-1 text-[10px] font-semibold tracking-[0.16em] text-accent uppercase sm:text-[11px]">
+          <span className="inline-flex items-center gap-2 rounded-full border border-accent/45 px-3 py-1 text-[10px] font-semibold tracking-[0.16em] text-accent-light uppercase sm:text-[11px]">
             <span className="relative flex size-1.5" aria-hidden="true">
               <span className="absolute inline-flex size-full animate-ping rounded-full bg-accent opacity-70" />
               <span className="relative inline-flex size-1.5 rounded-full bg-accent" />

@@ -123,7 +123,7 @@ export function OfferPopup() {
                 />
               </div>
               <div className="md:mt-4">
-                <p className="text-[10px] font-semibold tracking-[0.16em] text-accent uppercase sm:text-[11px]">Learn with</p>
+                <p className="text-[10px] font-semibold tracking-[0.16em] text-accent-light uppercase sm:text-[11px]">Learn with</p>
                 <p className="mt-0.5 font-display text-base leading-tight sm:mt-1 sm:text-xl">{mentorProfile.name}</p>
                 <p className="mt-0.5 text-[11px] leading-snug text-dim sm:mt-1 sm:text-xs">{mentorProfile.role}</p>
               </div>

@@ -1,6 +1,6 @@
 import { BrochurePopup } from "@/components/BrochurePopup";
+import { MobileCtaBar } from "@/components/MobileCtaBar";
 import { OfferPopup } from "@/components/OfferPopup";
-import { Certificate } from "@/components/sections/Certificate";
 import { CourseIntro } from "@/components/sections/CourseIntro";
 import { Curriculum } from "@/components/sections/Curriculum";
 import { Faq } from "@/components/sections/Faq";
@@ -25,13 +25,13 @@ export default function Home() {
         <Mentor />
         <FreeCourse />
         <WhyPaid />
-        <Certificate />
         <CourseIntro />
         <Curriculum />
         <Projects />
         <Faq />
       </main>
       <Footer />
+      <MobileCtaBar />
       <OfferPopup />
       <BrochurePopup />
     </>

@@ -91,7 +91,7 @@ function RoleCard({ index, active }: { index: number; active: boolean }) {
             <div className="flex items-center gap-3">
               <Spinner active={active} />
               <span
-                className={`font-mono text-[13px] font-bold tracking-[0.12em] uppercase ${active ? "text-accent" : "text-dim"}`}
+                className={`font-mono text-[13px] font-bold tracking-[0.12em] uppercase ${active ? "text-accent-light" : "text-dim"}`}
               >
                 0{index + 1} · {r.step}
               </span>

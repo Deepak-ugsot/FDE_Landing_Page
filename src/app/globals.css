@@ -115,7 +115,7 @@
 }
 
 /*
- * Scales a fixed-size illustration canvas (FeatureSections, 352px wide) to its container's
+ * Scales a fixed-size illustration canvas (the WhyPaid perk cards, 352px wide) to its container's
  * width. tan(atan2(a, b)) turns the length ratio 100cqw / 352px into a plain number.
  */
 @utility feature-canvas {

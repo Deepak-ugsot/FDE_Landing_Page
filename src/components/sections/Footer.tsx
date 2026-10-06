@@ -24,7 +24,7 @@ const socialTone = {
 
 function FooterLink({ href, children }: { href: string; children: React.ReactNode }) {
   return (
-    <a href={href} className="group relative flex items-center text-base transition-colors hover:text-accent">
+    <a href={href} className="group relative flex items-center text-base transition-colors hover:text-accent-light">
       {/* Accent dot slides in on hover, like the reference */}
       <span
         aria-hidden="true"
@@ -174,7 +174,7 @@ export function Footer() {
             <span>{year}</span>
             <Sparkle className="size-2.5 text-accent" />
             <span className="text-paper/50">{program.name}</span>
-            <a href={program.privacyHref} className="ml-4 transition-colors hover:text-accent">
+            <a href={program.privacyHref} className="ml-4 transition-colors hover:text-accent-light">
               Privacy Statement
             </a>
           </p>

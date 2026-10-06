@@ -92,14 +92,14 @@ export function Faq() {
                         style={{ transitionDelay: shown ? `${i * 90}ms, 0ms` : "0ms" }}
                         className={`block font-display text-[clamp(1.15rem,1.8vw,1.4rem)] leading-snug font-light transition-[transform,color] duration-700 ${ease} motion-reduce:transition-none ${
                           shown ? "translate-y-0" : "translate-y-[110%]"
-                        } ${isOpen ? "text-accent" : "text-paper group-hover:text-accent"}`}
+                        } ${isOpen ? "text-accent-light" : "text-paper group-hover:text-accent-light"}`}
                       >
                         {f.q}
                       </span>
                     </span>
                     <span
                       style={delay}
-                      className={`flex shrink-0 transition-opacity duration-700 ${shown ? "opacity-100" : "opacity-0"} ${isOpen ? "text-accent" : "text-paper"}`}
+                      className={`flex shrink-0 transition-opacity duration-700 ${shown ? "opacity-100" : "opacity-0"} ${isOpen ? "text-accent-light" : "text-paper"}`}
                     >
                       <Toggle open={isOpen} />
                     </span>
