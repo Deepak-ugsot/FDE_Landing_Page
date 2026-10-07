@@ -3,7 +3,7 @@ import { Check } from "lucide-react";
 import { CardTab } from "@/components/ui/CardTab";
 import { CtaButton } from "@/components/ui/CtaButton";
 import { program } from "@/content/program";
-import certificate from "../../../public/assets/demo_fde.png";
+import certificate from "../../../public/assets/dummy_certificate.png";
 import {
   CertificateVisual,
   CommunityVisual,
