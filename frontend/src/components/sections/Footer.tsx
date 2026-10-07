@@ -23,8 +23,14 @@ const socialTone = {
 } as const;
 
 function FooterLink({ href, children }: { href: string; children: React.ReactNode }) {
+  // Downloadable files (e.g. the brochure PDF) save instead of navigating.
+  const isDownload = href.endsWith(".pdf");
   return (
-    <a href={href} className="group relative flex items-center text-base transition-colors hover:text-accent-light">
+    <a
+      href={href}
+      {...(isDownload ? { download: true } : {})}
+      className="group relative flex items-center text-base transition-colors hover:text-accent-light"
+    >
       {/* Accent dot slides in on hover, like the reference */}
       <span
         aria-hidden="true"

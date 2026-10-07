@@ -1,4 +1,3 @@
-import { BrochurePopup } from "@/components/BrochurePopup";
 import { MobileCtaBar } from "@/components/MobileCtaBar";
 import { OfferPopup } from "@/components/OfferPopup";
 import { CourseIntro } from "@/components/sections/CourseIntro";
@@ -33,7 +32,6 @@ export default function Home() {
       <Footer />
       <MobileCtaBar />
       <OfferPopup />
-      <BrochurePopup />
     </>
   );
 }

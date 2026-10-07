@@ -47,6 +47,7 @@ export function Hero() {
           <CtaButton href={program.applyHref}>Explore the program</CtaButton>
           <a
             href={program.brochureHref}
+            download
             className="inline-flex h-12 items-center rounded-2xl border border-ink-line px-5 text-base font-medium transition-colors hover:border-paper"
           >
             Download brochure

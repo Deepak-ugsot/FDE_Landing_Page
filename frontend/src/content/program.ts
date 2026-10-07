@@ -6,7 +6,7 @@ export const program = {
   focus: "Applied GenAI & Agentic AI",
   nextCohort: "Dates announcing soon", // TODO: real cohort start date
   applyHref: "#apply", // TODO: application form URL
-  brochureHref: "#brochure", // TODO: brochure PDF URL
+  brochureHref: "/assets/FDE-Program-Brochure.pdf", // served from public/assets (downloads via the `download` attr)
   privacyHref: "#privacy", // TODO: privacy statement page
   youtubeHref: "https://www.youtube.com/@upGrad_edu", // TODO: link to the course playlist once it's live
   // Course intro video, autoplayed (muted) when its section scrolls into view. Set ONE of these:
