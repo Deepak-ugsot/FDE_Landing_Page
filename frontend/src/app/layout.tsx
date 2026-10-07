@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Urbanist } from "next/font/google";
 import { SmoothScroll } from "@/components/SmoothScroll";
+import { AuthProvider } from "@/context/AuthContext";
 import "./globals.css";
 
 // Free stand-ins for the reference fonts: Urbanist ≈ Telegraf (display), Inter ≈ Haffer SQ (body).
@@ -26,7 +27,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html lang="en" className={`${urbanist.variable} ${inter.variable}`}>
       <body className="min-h-screen">
         <SmoothScroll />
-        {children}
+        <AuthProvider>{children}</AuthProvider>
       </body>
     </html>
   );

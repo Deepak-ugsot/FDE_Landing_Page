@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { navLinks, program } from "@/content/program";
 import { Logo } from "@/components/ui/Logo";
+import { useAuth } from "@/context/AuthContext";
 
 const allLinks = [...navLinks, { label: "Apply now", href: program.applyHref }];
 const homeLabel = `${program.name} by ${program.mentor} — home`;
@@ -68,6 +70,13 @@ export function Nav() {
   const panelRef = useRef<HTMLDivElement>(null);
   const openerRef = useRef<HTMLElement | null>(null);
 
+  // Once signed in, "Apply now" is replaced by a profile avatar (top right).
+  const { isAuthenticated, user } = useAuth();
+  const initials =
+    user?.fullName?.trim().split(/\s+/).map((n) => n[0]).slice(0, 2).join("").toUpperCase() || "";
+  const desktopLinks = isAuthenticated ? navLinks : allLinks;
+  const menuLinks = isAuthenticated ? [...navLinks, { label: "Profile", href: "/profile" }] : allLinks;
+
   // Show the fixed bar once the in-flow nav has scrolled out of view.
   useEffect(() => {
     const update = () => {
@@ -112,28 +121,42 @@ export function Nav() {
           <Logo className="h-12 w-auto sm:h-14" />
         </a>
 
-        <ul className="hidden items-center gap-5 text-[15px] lg:flex">
-          {allLinks.map((link) => (
-            <li key={link.href}>
-              {/* Hover: an accent dot pops in on the left and a soft gradient pill fades in behind */}
-              <a
-                href={link.href}
-                className="group relative isolate flex h-8 items-center rounded-lg pr-2.5 pl-5 text-paper/80 transition-colors duration-300 hover:text-paper focus-visible:text-paper"
-              >
-                <span className="absolute left-2 flex size-1.5 items-center justify-center" aria-hidden="true">
-                  <span className="size-0 rounded-full bg-accent transition-all duration-300 ease-out group-hover:size-full group-focus-visible:size-full" />
-                </span>
-                {link.label}
-                <span
-                  aria-hidden="true"
-                  className="absolute inset-0 -z-10 rounded-lg bg-[linear-gradient(315deg,rgba(230,22,31,0.16),rgba(230,22,31,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100"
-                />
-              </a>
-            </li>
-          ))}
-        </ul>
+        <div className="flex items-center gap-3">
+          <ul className="hidden items-center gap-5 text-[15px] lg:flex">
+            {desktopLinks.map((link) => (
+              <li key={link.href}>
+                {/* Hover: an accent dot pops in on the left and a soft gradient pill fades in behind */}
+                <a
+                  href={link.href}
+                  className="group relative isolate flex h-8 items-center rounded-lg pr-2.5 pl-5 text-paper/80 transition-colors duration-300 hover:text-paper focus-visible:text-paper"
+                >
+                  <span className="absolute left-2 flex size-1.5 items-center justify-center" aria-hidden="true">
+                    <span className="size-0 rounded-full bg-accent transition-all duration-300 ease-out group-hover:size-full group-focus-visible:size-full" />
+                  </span>
+                  {link.label}
+                  <span
+                    aria-hidden="true"
+                    className="absolute inset-0 -z-10 rounded-lg bg-[linear-gradient(315deg,rgba(230,22,31,0.16),rgba(230,22,31,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100"
+                  />
+                </a>
+              </li>
+            ))}
+          </ul>
 
-        <MenuButton open={open} onClick={toggle} className="bg-ink text-paper lg:hidden" />
+          {/* Signed-in: circular profile avatar (links to the Profile section) */}
+          {isAuthenticated && (
+            <Link
+              href="/profile"
+              aria-label="Your profile"
+              title={user?.fullName}
+              className="grid size-10 place-items-center rounded-full bg-accent text-sm font-semibold text-on-accent ring-1 ring-white/10 transition-colors hover:bg-accent-light focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-light"
+            >
+              {initials}
+            </Link>
+          )}
+
+          <MenuButton open={open} onClick={toggle} className="bg-ink text-paper lg:hidden" />
+        </div>
       </nav>
 
       {/* Fixed bar: fades in once the nav above has scrolled away. Offsets match the nav's logo position. */}
@@ -182,7 +205,7 @@ export function Nav() {
           <MenuButton open onClick={close} className="-mr-3 bg-ink-deep text-paper" />
         </div>
         <ul className="mt-2 space-y-1">
-          {allLinks.map((link) => (
+          {menuLinks.map((link) => (
             <li key={link.href}>
               <a
                 href={link.href}

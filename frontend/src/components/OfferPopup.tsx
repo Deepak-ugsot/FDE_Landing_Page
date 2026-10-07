@@ -178,7 +178,11 @@ export function OfferPopup() {
                 ))}
               </ul>
               <div className="mt-4 sm:mt-6 md:mt-auto md:pt-6" onClick={close}>
-                <CtaButton href={program.platformHref}>Unlock FDE for {program.platformPrice}</CtaButton>
+                <CtaButton href="/signup">Unlock FDE for {program.platformPrice}</CtaButton>
+                <p className="mt-3 text-[12px] text-dim">
+                  Already enrolled?{" "}
+                  <a href="/login" className="text-accent-light hover:underline">Log in</a>
+                </p>
               </div>
             </div>
           </div>
