@@ -1,36 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AI Forward Deployed Engineer — Landing Page + Payments
 
-## Getting Started
+Monorepo for the **AI Forward Deployed Engineer** program landing page and its
+**₹99 Razorpay** unlock flow. The Razorpay integration mirrors the companion
+**Deploy** project's payment flow (create order → checkout → verify signature),
+trimmed to a standalone payment (no accounts/login).
 
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```
+.
+├── frontend/   # Next.js 16 marketing landing page (the existing site)
+└── backend/    # Express API for Razorpay create-order / verify (+ mock mode)
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## How the payment works
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. A visitor clicks **"Unlock FDE for ₹99"** in the offer popup.
+2. The frontend calls the backend `POST /api/payments/create-order`.
+3. **Razorpay Checkout** opens with that order (the key *secret* never leaves the backend).
+4. On payment, the frontend calls `POST /api/payments/verify`; the backend checks
+   the Razorpay signature and confirms the unlock.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+> **Mock mode:** with no Razorpay keys set, the backend simulates the whole flow
+> so it works end-to-end before you add keys. No money moves.
 
-## Learn More
+## Run it
 
-To learn more about Next.js, take a look at the following resources:
+Two terminals (or use the Claude Code launch configs `frontend` / `backend`):
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+# Terminal 1 — backend (http://localhost:5001)
+cd backend
+npm install
+npm run dev
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# Terminal 2 — frontend (http://localhost:3000)
+cd frontend
+npm install
+npm run dev
+```
 
-## Deploy on Vercel
+Open <http://localhost:3000>, click an "Unlock"/"Apply" CTA → **Unlock FDE for ₹99**.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Testing with real Razorpay (test keys)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Get **Test Mode** keys from the [Razorpay dashboard](https://dashboard.razorpay.com)
+   (Settings → API Keys).
+2. Put them in `backend/.env`:
+   ```
+   RAZORPAY_KEY_ID=rzp_test_xxxxxxxx
+   RAZORPAY_KEY_SECRET=xxxxxxxxxxxxxxxx
+   ```
+3. Restart the backend and pay with a test card (e.g. `4111 1111 1111 1111`).
+
+See [`backend/README.md`](backend/README.md) for the full payment/API reference and
+[`frontend/README.md`](frontend/README.md) for the Next.js app.
+
+## Price
+
+₹99 lives in two places:
+
+- **Server (source of truth):** `COURSE_PRICE=9900` paise in `backend/.env`.
+- **Display:** `program.platformPrice` in `frontend/src/content/program.ts`.

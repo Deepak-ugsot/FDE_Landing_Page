@@ -2,15 +2,21 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "next-dev",
+      "name": "frontend",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev"],
+      "runtimeArgs": ["--prefix", "frontend", "run", "dev"],
       "port": 3000
     },
     {
-      "name": "next-prod",
+      "name": "backend",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "start", "--", "-p", "3001"],
+      "runtimeArgs": ["--prefix", "backend", "run", "dev"],
+      "port": 5001
+    },
+    {
+      "name": "frontend-prod",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["--prefix", "frontend", "run", "start", "--", "-p", "3001"],
       "port": 3001
     }
   ]
