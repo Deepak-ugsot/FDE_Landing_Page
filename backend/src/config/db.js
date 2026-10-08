@@ -22,8 +22,13 @@ export const connectDB = async () => {
     throw new Error('MONGO_URI is not set. Add it to your .env file (or set USE_MEMORY_DB=true).');
   }
 
+  // Force the database name so this app ONLY ever uses its own database, no matter
+  // what the connection string points at. This is a hard guarantee that no other
+  // database on a shared/company cluster is read or written. Override with DB_NAME.
+  const dbName = process.env.DB_NAME || 'FDE';
+
   mongoose.set('strictQuery', true);
-  const conn = await mongoose.connect(uri);
+  const conn = await mongoose.connect(uri, { dbName });
   console.log(`✅ MongoDB connected: ${conn.connection.host}/${conn.connection.name}`);
   return conn;
 };

@@ -1,0 +1,41 @@
+# Render blueprint for the FDE backend (Express + MongoDB).
+#
+# Deploy: render.com → New → Blueprint → pick this repo. Render reads this file,
+# creates the service, and prompts you for the secret env vars (marked
+# `sync: false`). JWT_SECRET is generated for you.
+services:
+  - type: web
+    name: fde-landing-backend
+    runtime: node
+    plan: free
+    rootDir: backend
+    buildCommand: npm install --omit=dev
+    startCommand: npm start
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: USE_MEMORY_DB
+        value: "false"
+      # This project's dedicated database — the app only ever touches this one.
+      - key: DB_NAME
+        value: FDE
+      - key: COURSE_PRICE
+        value: "9900"
+      - key: CURRENCY
+        value: INR
+      # Auto-generated strong secret for signing JWTs.
+      - key: JWT_SECRET
+        generateValue: true
+      # Secrets — set these in the Render dashboard (never committed):
+      - key: MONGO_URI          # mongodb+srv://<user>:<pass>@<cluster>/fde_landing?retryWrites=true&w=majority
+        sync: false
+      - key: RAZORPAY_KEY_ID    # rzp_test_...
+        sync: false
+      - key: RAZORPAY_KEY_SECRET
+        sync: false
+      - key: CLIENT_URL         # https://<your-vercel-domain>.vercel.app  (for CORS)
+        sync: false
+      - key: LMS_URL            # optional: redirect after payment
+        sync: false
